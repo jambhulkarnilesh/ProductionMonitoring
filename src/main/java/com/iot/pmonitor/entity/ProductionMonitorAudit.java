@@ -41,20 +41,24 @@ public class ProductionMonitorAudit extends AuditEnabledEntity {
     private String machCompletedJobCount;
 
     @Column(name = "MACH_JOB_STATUS")
-    private String status;
+    private String machJobStatus;
     @Column(name = "IS_ACTIVE")
     private boolean isActive;
 
+    @Column(name = "status")
+    private String status;
+
     @Builder(builderMethodName = "productionMonitorAuditBuilder")
-    public ProductionMonitorAudit(Integer machineId, String machineStatus, Integer partId, String machTargetJobCount, String machCompletedJobCount, String status, boolean isActive, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
+    public ProductionMonitorAudit(Integer machineId, String machineStatus, Integer partId, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, boolean isActive, String status, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.machineId = machineId;
         this.machineStatus = machineStatus;
         this.partId = partId;
         this.machTargetJobCount = machTargetJobCount;
         this.machCompletedJobCount = machCompletedJobCount;
-        this.status = status;
+        this.machJobStatus = machJobStatus;
         this.isActive = isActive;
+        this.status = status;
     }
 }
 

@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface ProductionMonitorRepo extends JpaRepository<ProductionMonitorEntity, String> {
 
-    @Query(value = SQLQueryConstants.ALL_PRODUCTION_MONITOR, nativeQuery = true)
+    @Query(value = SQLQueryConstants.LIVE_PRODUCTION_MONITOR, nativeQuery = true)
     public List<Object[]> getProductionMonitor();
+
+
 }

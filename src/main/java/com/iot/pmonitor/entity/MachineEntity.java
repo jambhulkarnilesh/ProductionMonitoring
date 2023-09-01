@@ -37,13 +37,17 @@ public class MachineEntity extends AuditEnabledEntity {
     @Column(name = "MACH_PLC_TYPE")
     private String machinePLCType;
 
+    @Column(name = "status")
+    private String status;
+
     @Builder(builderMethodName = "machineEntityBuilder")
-    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
+    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType, String status, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
         super(createdDate,createdUserId, updatedDate, updatedUserId);
         this.machineId = machineId;
         this.machineName = machineName;
         this.machineIpAddress = machineIpAddress;
         this.machinePortNo = machinePortNo;
         this.machinePLCType = machinePLCType;
+        this.status = status;
     }
 }

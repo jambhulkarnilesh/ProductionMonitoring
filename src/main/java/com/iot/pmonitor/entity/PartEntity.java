@@ -30,10 +30,13 @@ public class PartEntity extends AuditEnabledEntity {
     @Column(name = "PART_NAME")
     private String partName;
 
+    @Column(name = "status")
+    private String status;
 
     @Builder(builderMethodName = "partEntityBuilder")
-    public PartEntity(String partName, Instant createdDate, String createdUserId,  Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId,  updatedDate, updatedUserId);
+    public PartEntity(String partName, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+        super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.partName = partName;
+        this.status = status;
     }
 }

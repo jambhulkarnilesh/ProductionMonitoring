@@ -10,15 +10,21 @@ import com.iot.pmonitor.repository.MachineRepo;
 import com.iot.pmonitor.repository.PartRepo;
 import com.iot.pmonitor.repository.ProductionMonitorAuditRepo;
 import com.iot.pmonitor.repository.ProductionMonitorRepo;
+import com.iot.pmonitor.request.PMSearch;
 import com.iot.pmonitor.request.ProductionMonitorRequest;
+import com.iot.pmonitor.response.PMLiveResponse;
+import com.iot.pmonitor.response.PMReportResponse;
 import com.iot.pmonitor.response.PMResponse;
-import com.iot.pmonitor.response.ProductionHeaderResponse;
 import com.iot.pmonitor.service.ProductionMonitorService;
+import com.iot.pmonitor.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,10 +33,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProductionMonitorServiceImpl implements ProductionMonitorService {
     @Autowired
-    private ProductionMonitorRepo productionHeaderRepo;
+    private ProductionMonitorRepo productionMonitorRepo;
 
     @Autowired
-    private ProductionMonitorAuditRepo headerAuditRepo;
+    private ProductionMonitorAuditRepo monitorAuditRepo;
 
     @Autowired
     private MachineRepo machineRepo;
@@ -40,13 +46,13 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
 
 
     @Override
-    public PMResponse saveProductionMonitorDetails(ProductionMonitorRequest monitorRequest) {
+    public PMResponse savePMDetails(ProductionMonitorRequest monitorRequest) {
 
         ProductionMonitorEntity headerEntity = convertProdMonitorRequestToEntity(monitorRequest);
         try {
-            productionHeaderRepo.save(headerEntity);
+            productionMonitorRepo.save(headerEntity);
             ProductionMonitorAudit productionHeaderAudit = convertProdMonitorEntityToAudit(headerEntity);
-            headerAuditRepo.save(productionHeaderAudit);
+            monitorAuditRepo.save(productionHeaderAudit);
             return PMResponse.builder()
                     .isSuccess(true)
                     .responseMessage(PMConstants.RECORD_SUCCESS)
@@ -58,15 +64,50 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
     }
 
     @Override
-    public List<ProductionHeaderResponse> getProductionMonitorDetails() {
-        List<ProductionHeaderResponse> productionHeaderResponses = null;
-        List<Object[]> productionHeaderData = productionHeaderRepo.getProductionMonitor();
+    public List<PMLiveResponse> getLivePMDetails() {
+        List<PMLiveResponse> productionHeaderResponses = null;
+        List<Object[]> productionHeaderData = productionMonitorRepo.getProductionMonitor();
         if (!CollectionUtils.isEmpty(productionHeaderData)) {
             productionHeaderResponses = productionHeaderData.stream()
-                    .map(ProductionHeaderResponse::new)
+                    .map(PMLiveResponse::new)
                     .collect(Collectors.toList());
         }
         return productionHeaderResponses;
+    }
+
+    @Override
+    public PMResponse findPMDetails(PMSearch pmSearch) {
+        List<PMReportResponse> pmReportResponses = null;
+        Integer pageSize = pmSearch.getPageable().getPageSize();
+        Integer pageOffset = (int) pmSearch.getPageable().getOffset();
+
+        String pmFromDate = null == pmSearch.getFromDate() ? DateTimeUtils.getFirstDayOfCurrentMonth() : pmSearch.getFromDate();
+        String pmToDate = null == pmSearch.getToDate() ? LocalDate.now().toString() : pmSearch.getToDate();
+
+        String sortName = null;
+        String sortDirection = null;
+
+        Optional<Sort.Order> order = pmSearch.getPageable().getSort().get().findFirst();
+
+        if (order.isPresent()) {
+            sortName = order.get().getProperty();  // order by this field
+            sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
+        }
+        List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), pmSearch.getMachJobStatus(), sortName, pageSize, pageOffset);
+
+        if (!CollectionUtils.isEmpty(pmData)) {
+            pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
+            System.out.println(pmReportResponses);
+        }
+
+        long totalRecords = monitorAuditRepo.getCountAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), pmSearch.getMachJobStatus());
+
+        PageImpl<PMReportResponse> reportResponses = new PageImpl<>(pmReportResponses, pmSearch.getPageable(), totalRecords);
+        return PMResponse.builder()
+                .isSuccess(true)
+                .responseData(reportResponses)
+                .responseMessage(PMConstants.RECORD_FETCH)
+                .build();
     }
 
     private ProductionMonitorAudit convertProdMonitorEntityToAudit(ProductionMonitorEntity monintorEntity) {
@@ -99,17 +140,17 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
                 .build();
     }
 
-    private String getMachineName(Integer machineId){
+    private String getMachineName(Integer machineId) {
         Optional<MachineEntity> machineEntity = machineRepo.findById(machineId);
-        if(machineEntity.isPresent()){
+        if (machineEntity.isPresent()) {
             return machineEntity.get().getMachineName();
         }
         return null;
     }
 
-    private String getPartName(Integer partId){
+    private String getPartName(Integer partId) {
         Optional<PartEntity> partEntity = partRepo.findById(partId);
-        if(partEntity.isPresent()){
+        if (partEntity.isPresent()) {
             return partEntity.get().getPartName();
         }
         return null;

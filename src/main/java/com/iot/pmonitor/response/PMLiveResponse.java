@@ -9,7 +9,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductionHeaderResponse {
+public class PMLiveResponse {
 
     private Integer machineId;
     private String machineName;
@@ -20,7 +20,7 @@ public class ProductionHeaderResponse {
     private String machCompletedJobCount;
     private String machBalanceJobCount;
 
-    public ProductionHeaderResponse(Object[] objects) {
+    public PMLiveResponse(Object[] objects) {
 
         this.machineId = Objects.nonNull(objects[0]) ? Integer.parseInt(String.valueOf(objects[0])) : null;
         this.machineName = String.valueOf(objects[1]);
