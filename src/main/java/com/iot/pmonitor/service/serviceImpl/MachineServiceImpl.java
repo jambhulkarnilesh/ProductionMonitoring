@@ -55,6 +55,9 @@ public class MachineServiceImpl implements MachineService {
             case "BY_NAME":
                 machineEntities = machineRepo.findByMachineName(searchString, pageable);
                 break;
+            case "BY_STATUS":
+                machineEntities = machineRepo.findByStatus(searchString, pageable);
+                break;
             default:
                 machineEntities = machineRepo.findAll(pageable);
         }

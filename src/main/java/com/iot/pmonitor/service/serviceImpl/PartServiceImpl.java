@@ -56,6 +56,10 @@ public class PartServiceImpl implements PartService {
             case "BY_NAME":
                 partEntities = partRepo.findByPartName(searchString, pageable);
                 break;
+            case "BY_STATUS":
+                partEntities = partRepo.findByStatus(searchString, pageable);
+                break;
+            case "ALL":
             default:
                 partEntities = partRepo.findAll(pageable);
         }
