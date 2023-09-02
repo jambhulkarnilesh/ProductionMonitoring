@@ -2,11 +2,13 @@ package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.MachineEntity;
+import com.iot.pmonitor.entity.PartAudit;
 import com.iot.pmonitor.entity.PartEntity;
 import com.iot.pmonitor.entity.ProductionMonitorAudit;
 import com.iot.pmonitor.entity.ProductionMonitorEntity;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.MachineRepo;
+import com.iot.pmonitor.repository.PartAuditRepo;
 import com.iot.pmonitor.repository.PartRepo;
 import com.iot.pmonitor.repository.ProductionMonitorAuditRepo;
 import com.iot.pmonitor.repository.ProductionMonitorRepo;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +47,14 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
     @Autowired
     private PartRepo partRepo;
 
+    @Autowired
+    private PartAuditRepo partAuditRepo;
 
+    @Transactional
     @Override
     public PMResponse savePMDetails(ProductionMonitorRequest monitorRequest) {
+        //check part target is set or not. if set then check machine target shouold not be greater than part target
+        validateMachineTargetJobCount(monitorRequest.getPartId(), monitorRequest.getMachTargetJobCount());
 
         ProductionMonitorEntity monitorEntity = convertProdMonitorRequestToEntity(monitorRequest);
         try {
@@ -85,13 +93,13 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
         String pmToDate = null == pmSearch.getToDate() ? LocalDate.now().toString() : pmSearch.getToDate();
 
         String sortName = null;
-        String sortDirection = null;
+        //String sortDirection = null;
 
         Optional<Sort.Order> order = pmSearch.getPageable().getSort().get().findFirst();
 
         if (order.isPresent()) {
             sortName = order.get().getProperty();  // order by this field
-            sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
+            // sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
         }
         List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), pmSearch.getMachJobStatus(), sortName, pageSize, pageOffset);
 
@@ -120,10 +128,46 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
                 .partName(getPartName(monitorRequest.getPartId()))
                 .machTargetJobCount(monitorRequest.getMachTargetJobCount())
                 .machCompletedJobCount(monitorRequest.getMachCompletedJobCount())
-                .status(monitorRequest.getStatus())
                 .isCompleted(monitorRequest.getIsCompleted())
-                .createdUserId(monitorRequest.getCreatedUserId())
+                .remark(monitorRequest.getRemark())
+                .status(monitorRequest.getStatus())
+                .createdUserId(monitorRequest.getEmployeeId())
                 .build();
+    }
+
+    private void validateMachineTargetJobCount(Integer partId, String machTargetJobCount) {
+        Optional<PartEntity> partEntity = partRepo.findById(partId);
+        Integer balanceAssignedJobCount = 0;
+        String partName = null;
+        String partJobTarget = null;
+        String partJobAssigned = null;
+        if (partEntity.isPresent()) {
+            partName = partEntity.get().getPartName();
+            partJobTarget = partEntity.get().getPartJobTarget();
+            partJobAssigned = partEntity.get().getPartJobAssigned();
+        }
+        if (null != partJobTarget && null != partJobAssigned) {
+            if (0 == Integer.parseInt(partJobTarget)) {
+                log.error("Inside ProductionMonitorServiceImpl >> validateMachineTargetJobCount()");
+                throw new PMException("ProductionMonitorServiceImpl", false, "Please add Target Job Receipe first");
+            }
+            balanceAssignedJobCount = Integer.parseInt(partJobTarget) - Integer.parseInt(partJobAssigned);
+            if (Integer.parseInt(machTargetJobCount) > balanceAssignedJobCount) {
+                log.error("Inside ProductionMonitorServiceImpl >> validateMachineTargetJobCount()");
+                throw new PMException("ProductionMonitorServiceImpl", false, "Machine Job count is greater than Part target count");
+            }
+        }
+        Integer totalPartJobAssigned = Integer.parseInt(partJobAssigned) + Integer.parseInt(machTargetJobCount);
+        partRepo.updateJobPartCount(partId, totalPartJobAssigned);
+        PartAudit partAudit = new PartAudit();
+        partAudit.setPartId(partId);
+        partAudit.setPartName(partName);
+        partAudit.setPartJobTarget(partJobTarget);
+        partAudit.setPartJobAssigned(totalPartJobAssigned.toString());
+        partAudit.setStatus("A");
+        //partAudit.setUpdatedDate();
+        partAudit.setRemark("Part job assigned for macheine : "+totalPartJobAssigned);
+        partAuditRepo.save(partAudit);
     }
 
     private String convertStatusIdToName(Integer machineStatusId) {
@@ -139,6 +183,7 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
                 statusName = "Fault";
                 break;
             default:
+                statusName = null;
         }
         return statusName;
     }

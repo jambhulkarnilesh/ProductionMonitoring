@@ -25,6 +25,12 @@ public class MachineRequest {
     @Schema(example = "1000", description = "This field is used for Machine maximum capacity to produce")
     private String machineMaxCapacity;
 
+    @Schema(example = "This is request remark", description = "This field is used for Machine maximum capacity to produce")
+    private String remark;
+
+    @Schema(example = "A", description = "This field is used for Status i.e A or I")
+    private String status;
+
     @Schema(example = "PM", description = "This field is used for Created User Id")
-    private String createdUserId;
+    private String employeeId;
 }

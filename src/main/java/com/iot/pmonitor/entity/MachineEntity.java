@@ -1,5 +1,6 @@
 package com.iot.pmonitor.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,17 +40,21 @@ public class MachineEntity extends AuditEnabledEntity {
 
     @Column(name = "MACH_MAX_CAPACITY")
     private String machineMaxCapacity;
+
+    @Schema(example = "REMARK")
+    private String remark;
     @Column(name = "status")
     private String status;
 
     @Builder(builderMethodName = "machineEntityBuilder")
-    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType, String status, String machineMaxCapacity, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
+    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType,  String machineMaxCapacity, String remark, String status, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.machineName = machineName;
         this.machineIpAddress = machineIpAddress;
         this.machinePortNo = machinePortNo;
         this.machinePLCType = machinePLCType;
-        this.status = status;
         this.machineMaxCapacity = machineMaxCapacity;
+        this.remark = remark;
+        this.status = status;
     }
 }

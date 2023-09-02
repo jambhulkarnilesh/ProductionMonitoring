@@ -72,8 +72,9 @@ public class MachineServiceImpl implements MachineService {
                 .machinePortNo(machineRequest.getMachinePortNo())
                 .machinePLCType(machineRequest.getMachinePLCType())
                 .machineMaxCapacity(machineRequest.getMachineMaxCapacity())
-                .status("A")
-                .createdUserId(machineRequest.getCreatedUserId())
+                .remark(machineRequest.getRemark())
+                .status(machineRequest.getStatus())
+                .createdUserId(machineRequest.getEmployeeId())
                 .build();
     }
 }

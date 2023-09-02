@@ -1,5 +1,6 @@
 package com.iot.pmonitor.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,11 +45,14 @@ public class ProductionMonitorEntity extends AuditEnabledEntity {
 
     @Column(name = "MACH_JOB_COMPLETED")
     private String isCompleted;
+
+    @Schema(example = "REMARK")
+    private String remark;
     @Column(name = "status")
     private String status;
 
     @Builder(builderMethodName = "productionMonitorEntityBuilder")
-    public ProductionMonitorEntity(Integer machineId, String machineName, String machineStatus, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, String isCompleted, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public ProductionMonitorEntity(Integer machineId, String machineName, String machineStatus, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, String isCompleted, String remark, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.machineId = machineId;
         this.machineName = machineName;
@@ -59,6 +63,7 @@ public class ProductionMonitorEntity extends AuditEnabledEntity {
         this.machCompletedJobCount = machCompletedJobCount;
         this.machJobStatus = machJobStatus;
         this.isCompleted = isCompleted;
+        this.remark = remark;
         this.status = status;
     }
 }

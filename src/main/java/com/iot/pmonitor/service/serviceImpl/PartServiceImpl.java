@@ -72,8 +72,9 @@ public class PartServiceImpl implements PartService {
                 .partName(partRequest.getPartName())
                 .partJobTarget(partRequest.getPartJobTarget())
                 .partJobAssigned(partRequest.getPartJobAssigned())
-                .status("A")
-                .createdUserId(partRequest.getCreatedUserId())
+                .remark(partRequest.getRemark())
+                .status(partRequest.getStatus())
+                .createdUserId(partRequest.getEmployeeId())
                 .build();
     }
 }

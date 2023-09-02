@@ -1,5 +1,6 @@
 package com.iot.pmonitor.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,16 +33,21 @@ public class PartEntity extends AuditEnabledEntity {
 
     @Column(name = "PART_JOB_ASSIGNED")
     private String partJobAssigned;
+
+
+    @Schema(example = "REMARK")
+    private String remark;
     @Column(name = "status")
     private String status;
 
     @Builder(builderMethodName = "partEntityBuilder")
-    public PartEntity(Integer partId, String partName, String partJobTarget, String partJobAssigned, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public PartEntity(Integer partId, String partName, String partJobTarget, String partJobAssigned, String remark, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.partId = partId;
         this.partName = partName;
         this.partJobTarget = partJobTarget;
         this.partJobAssigned = partJobAssigned;
+        this.remark = remark;
         this.status = status;
     }
 }

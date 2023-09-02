@@ -1,5 +1,6 @@
 package com.iot.pmonitor.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +35,9 @@ public class PartAudit extends AuditEnabledEntity {
 
     @Column(name = "PART_JOB_ASSIGNED")
     private String partJobAssigned;
+
+    @Schema(example = "REMARK")
+    private String remark;
     @Column(name = "status")
     private String status;
 
@@ -44,6 +48,7 @@ public class PartAudit extends AuditEnabledEntity {
         this.partJobTarget = partEntity.getPartJobTarget();
         this.partJobAssigned = partEntity.getPartJobAssigned();
         this.partJobAssigned = partEntity.getPartJobAssigned();
+        this.remark = partEntity.getRemark();
         this.status = partEntity.getStatus();
     }
 }

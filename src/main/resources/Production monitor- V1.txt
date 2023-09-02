@@ -1,0 +1,114 @@
+/*
+drop table production_monitor ;
+drop table production_monitor_audit ;
+drop table machine;
+drop table machine_audit;
+drop table part;
+drop table part_audit ;*/
+
+create table machine(
+    MACH_ID serial  PRIMARY key,
+	MACH_NAME VARCHAR(20),
+	MACH_IP_ADDRESS VARCHAR(20),
+	MACH_PORT_NO VARCHAR(20),
+	MACH_PLC_TYPE VARCHAR(20),
+	MACH_MAX_CAPACITY VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create table machine_audit(
+	MACH_AUD_ID serial PRIMARY key,
+    MACH_ID int,
+	MACH_NAME VARCHAR(20),
+	MACH_IP_ADDRESS VARCHAR(20),
+	MACH_PORT_NO VARCHAR(20),
+	MACH_PLC_TYPE VARCHAR(20),
+	MACH_MAX_CAPACITY VARCHAR(20),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+
+
+create table part(
+    PART_ID int PRIMARY key,
+	PART_NAME VARCHAR(20),
+	PART_JOB_TARGET VARCHAR(10),
+	PART_JOB_ASSIGNED VARCHAR(10),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+create table part_audit(
+	PART_AUD_ID serial PRIMARY key,
+    PART_ID int,
+	PART_NAME VARCHAR(20),
+	PART_JOB_TARGET VARCHAR(10),
+	PART_JOB_ASSIGNED VARCHAR(10),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create  table production_monitor(
+    MACH_ID int PRIMARY key,
+	MACH_NAME VARCHAR(20),
+	MACH_STATUS VARCHAR(10),
+	PART_ID int,
+	PART_NAME VARCHAR(20),
+	MACH_TARGET_JOB_COUNT  VARCHAR(20),
+	MACH_COMPLETED_JOB_COUNT  VARCHAR(20),
+	MACH_JOB_STATUS  VARCHAR(20),
+	MACH_JOB_COMPLETED VARCHAR(20),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null,
+	CONSTRAINT FK_MACH_ID FOREIGN KEY(MACH_ID) REFERENCES MACHINE(MACH_ID),
+	CONSTRAINT FK_PART_ID FOREIGN KEY(PART_ID) REFERENCES PART(PART_ID)
+);
+
+
+create table production_monitor_audit(
+	PHA_ID serial PRIMARY key,
+   MACH_ID int,
+	MACH_NAME VARCHAR(20),
+	MACH_STATUS VARCHAR(10),
+	PART_ID int,
+	PART_NAME VARCHAR(20),
+	MACH_TARGET_JOB_COUNT  VARCHAR(20),
+	MACH_COMPLETED_JOB_COUNT  VARCHAR(20),
+	MACH_JOB_STATUS  VARCHAR(20),
+	MACH_JOB_COMPLETED VARCHAR(20),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null,
+	CONSTRAINT FK_MACH_ID FOREIGN KEY(MACH_ID) REFERENCES MACHINE(MACH_ID),
+	CONSTRAINT FK_PART_ID FOREIGN KEY(PART_ID) REFERENCES PART(PART_ID)
+);
+
+
