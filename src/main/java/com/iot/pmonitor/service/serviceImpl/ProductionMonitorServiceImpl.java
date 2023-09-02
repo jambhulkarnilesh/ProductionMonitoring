@@ -101,7 +101,7 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
             sortName = order.get().getProperty();  // order by this field
             // sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
         }
-        List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), pmSearch.getMachJobStatus(), sortName, pageSize, pageOffset);
+        List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), sortName, pageSize, pageOffset);
 
         if (!CollectionUtils.isEmpty(pmData)) {
             pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
