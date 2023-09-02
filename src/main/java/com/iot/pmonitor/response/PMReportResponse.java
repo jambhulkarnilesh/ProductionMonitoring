@@ -20,7 +20,7 @@ public class PMReportResponse {
     private String machJobStatus;
     private String createdDateTime;
     private String updatedDateTime;
-    public float timeDifference;
+    private float timeDifference;
 
 
     public PMReportResponse(Object[] object) {

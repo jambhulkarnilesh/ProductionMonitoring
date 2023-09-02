@@ -48,11 +48,11 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
     @Override
     public PMResponse savePMDetails(ProductionMonitorRequest monitorRequest) {
 
-        ProductionMonitorEntity headerEntity = convertProdMonitorRequestToEntity(monitorRequest);
+        ProductionMonitorEntity monitorEntity = convertProdMonitorRequestToEntity(monitorRequest);
         try {
-            productionMonitorRepo.save(headerEntity);
-            ProductionMonitorAudit productionHeaderAudit = convertProdMonitorEntityToAudit(headerEntity);
-            monitorAuditRepo.save(productionHeaderAudit);
+            productionMonitorRepo.save(monitorEntity);
+            ProductionMonitorAudit monitorAudit = new ProductionMonitorAudit(monitorEntity);
+            monitorAuditRepo.save(monitorAudit);
             return PMResponse.builder()
                     .isSuccess(true)
                     .responseMessage(PMConstants.RECORD_SUCCESS)
@@ -97,7 +97,6 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
 
         if (!CollectionUtils.isEmpty(pmData)) {
             pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
-            System.out.println(pmReportResponses);
         }
 
         long totalRecords = monitorAuditRepo.getCountAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), pmSearch.getMachJobStatus());
@@ -110,34 +109,38 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
                 .build();
     }
 
-    private ProductionMonitorAudit convertProdMonitorEntityToAudit(ProductionMonitorEntity monintorEntity) {
-        return ProductionMonitorAudit.productionMonitorAuditBuilder()
-
-                .machineId(monintorEntity.getMachineId())
-                .machineStatus(monintorEntity.getMachineStatus())
-                .partId(monintorEntity.getPartId())
-                .machTargetJobCount(monintorEntity.getMachTargetJobCount())
-                .machCompletedJobCount(monintorEntity.getMachCompletedJobCount())
-                .status(monintorEntity.getStatus())
-                .isActive(true)
-                .createdUserId(monintorEntity.getCreatedUserId())
-                .build();
-    }
 
     private ProductionMonitorEntity convertProdMonitorRequestToEntity(ProductionMonitorRequest monitorRequest) {
         return ProductionMonitorEntity.productionMonitorEntityBuilder()
 
                 .machineId(monitorRequest.getMachineId())
                 .machineName(getMachineName(monitorRequest.getMachineId()))
-                .machineStatus(monitorRequest.getMachineStatus())
+                .machineStatus(convertStatusIdToName(monitorRequest.getMachineStatusId()))
                 .partId(monitorRequest.getPartId())
                 .partName(getPartName(monitorRequest.getPartId()))
                 .machTargetJobCount(monitorRequest.getMachTargetJobCount())
                 .machCompletedJobCount(monitorRequest.getMachCompletedJobCount())
                 .status(monitorRequest.getStatus())
-                .isActive(true)
+                .isCompleted(monitorRequest.getIsCompleted())
                 .createdUserId(monitorRequest.getCreatedUserId())
                 .build();
+    }
+
+    private String convertStatusIdToName(Integer machineStatusId) {
+        String statusName = null;
+        switch (machineStatusId) {
+            case 1:
+                statusName = "Running";
+                break;
+            case 2:
+                statusName = "Idle";
+                break;
+            case 3:
+                statusName = "Fault";
+                break;
+            default:
+        }
+        return statusName;
     }
 
     private String getMachineName(Integer machineId) {

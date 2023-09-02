@@ -33,7 +33,7 @@ public class ProductionMonitorController {
     private ProductionMonitorService monitorService;
 
     @PostMapping
-    public ResponseEntity savePMDetails(@RequestBody ProductionMonitorRequest headerRequest) {
+    public ResponseEntity<Object> savePMDetails(@RequestBody ProductionMonitorRequest headerRequest) {
         return new ResponseEntity<>(monitorService.savePMDetails(headerRequest), HttpStatus.OK);
     }
 
@@ -44,7 +44,7 @@ public class ProductionMonitorController {
 
     @PostMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity getPartDetails(@Valid @RequestBody PMSearchRequest pmSearchRequest,
+    public ResponseEntity<Object> getPartDetails(@Valid @RequestBody PMSearchRequest pmSearchRequest,
                                          @Parameter(hidden = true) Pageable pageable,
                                          @Parameter(hidden = true) PageDirection pageDirection,
                                          @Parameter(hidden = true) String sortParam) {
@@ -60,14 +60,11 @@ public class ProductionMonitorController {
                 .machTargetJobCount(pmSearchRequest.getMachTargetJobCount())
                 .machCompletedJobCount(pmSearchRequest.getMachCompletedJobCount())
                 .machJobStatus(pmSearchRequest.getMachJobStatus())
-
                 .pageable(pageable)
                 .sortDirection(PMUtils.getDirection(pageDirection))
                 .sortName(sortParam)
-
                 .build();
         PMResponse response = monitorService.findPMDetails(pmSearchCriteria);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 }

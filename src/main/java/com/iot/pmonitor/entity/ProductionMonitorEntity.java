@@ -1,6 +1,5 @@
 package com.iot.pmonitor.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,13 +42,13 @@ public class ProductionMonitorEntity extends AuditEnabledEntity {
     @Column(name = "MACH_JOB_STATUS")
     private String machJobStatus;
 
-    @Column(name = "IS_ACTIVE")
-    private boolean isActive;
-
+    @Column(name = "MACH_JOB_COMPLETED")
+    private String isCompleted;
     @Column(name = "status")
     private String status;
+
     @Builder(builderMethodName = "productionMonitorEntityBuilder")
-    public ProductionMonitorEntity(Integer machineId,  String machineName, String machineStatus, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, boolean isActive, String status,  Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public ProductionMonitorEntity(Integer machineId, String machineName, String machineStatus, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, String isCompleted, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.machineId = machineId;
         this.machineName = machineName;
@@ -59,7 +58,7 @@ public class ProductionMonitorEntity extends AuditEnabledEntity {
         this.machTargetJobCount = machTargetJobCount;
         this.machCompletedJobCount = machCompletedJobCount;
         this.machJobStatus = machJobStatus;
-        this.isActive = isActive;
+        this.isCompleted = isCompleted;
         this.status = status;
     }
 }

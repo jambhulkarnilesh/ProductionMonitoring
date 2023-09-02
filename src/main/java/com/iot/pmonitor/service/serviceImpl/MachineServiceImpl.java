@@ -1,9 +1,11 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.MachineAudit;
 import com.iot.pmonitor.entity.MachineEntity;
 import com.iot.pmonitor.enums.SearchEnum;
 import com.iot.pmonitor.exception.PMException;
+import com.iot.pmonitor.repository.MachineAuditRepo;
 import com.iot.pmonitor.repository.MachineRepo;
 import com.iot.pmonitor.request.MachineRequest;
 import com.iot.pmonitor.response.PMResponse;
@@ -22,11 +24,16 @@ public class MachineServiceImpl implements MachineService {
     @Autowired
     private MachineRepo machineRepo;
 
+    @Autowired
+    private MachineAuditRepo machineAuditRepo;
+
     @Override
     public PMResponse saveMachine(MachineRequest machineRequest) {
         MachineEntity machineEntity = convertMachineRequestToEntity(machineRequest);
         try {
             machineRepo.save(machineEntity);
+            MachineAudit machineAudit = new MachineAudit(machineEntity);
+            machineAuditRepo.save(machineAudit);
             return PMResponse.builder()
                     .isSuccess(true)
                     .responseMessage(PMConstants.RECORD_SUCCESS)
@@ -64,6 +71,7 @@ public class MachineServiceImpl implements MachineService {
                 .machineIpAddress(machineRequest.getMachineIpAddress())
                 .machinePortNo(machineRequest.getMachinePortNo())
                 .machinePLCType(machineRequest.getMachinePLCType())
+                .machineMaxCapacity(machineRequest.getMachineMaxCapacity())
                 .status("A")
                 .createdUserId(machineRequest.getCreatedUserId())
                 .build();

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MachineRequest {
+
     @Schema(example = "Lumenious", description = "This field is used for Machine name")
     private String machineName;
 
@@ -20,6 +21,9 @@ public class MachineRequest {
 
     @Schema(example = "PLC", description = "This field is used for Machine PLC Type")
     private String machinePLCType;
+
+    @Schema(example = "1000", description = "This field is used for Machine maximum capacity to produce")
+    private String machineMaxCapacity;
 
     @Schema(example = "PM", description = "This field is used for Created User Id")
     private String createdUserId;

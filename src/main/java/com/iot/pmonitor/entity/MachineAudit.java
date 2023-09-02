@@ -1,8 +1,8 @@
 package com.iot.pmonitor.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -11,18 +11,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "machine")
+@Table(name = "machine_audit")
 @NoArgsConstructor
 @AllArgsConstructor
-public class MachineEntity extends AuditEnabledEntity {
+@EqualsAndHashCode(callSuper = true)
+public class MachineAudit extends AuditEnabledEntity {
 
     @Id
-    @Column(name = "MACH_ID")
+    @Column(name = "MACH_AUD_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer machineAuditId;
+
+    @Column(name = "MACH_ID")
     private Integer machineId;
 
     @Column(name = "MACH_NAME")
@@ -42,14 +45,14 @@ public class MachineEntity extends AuditEnabledEntity {
     @Column(name = "status")
     private String status;
 
-    @Builder(builderMethodName = "machineEntityBuilder")
-    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType, String status, String machineMaxCapacity, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
-        super(createdDate, createdUserId, updatedDate, updatedUserId);
-        this.machineName = machineName;
-        this.machineIpAddress = machineIpAddress;
-        this.machinePortNo = machinePortNo;
-        this.machinePLCType = machinePLCType;
-        this.status = status;
-        this.machineMaxCapacity = machineMaxCapacity;
+    public MachineAudit(MachineEntity machineEntity) {
+        super(machineEntity.getCreatedDate(), machineEntity.getCreatedUserId(), machineEntity.getUpdatedDate(), machineEntity.getUpdatedUserId());
+        this.machineId = machineEntity.getMachineId();
+        this.machineName = machineEntity.getMachineName();
+        this.machineIpAddress = machineEntity.getMachineIpAddress();
+        this.machinePortNo = machineEntity.getMachinePortNo();
+        this.machinePLCType = machineEntity.getMachinePLCType();
+        this.machineMaxCapacity = machineEntity.getMachineMaxCapacity();
+        this.status = machineEntity.getStatus();
     }
 }
