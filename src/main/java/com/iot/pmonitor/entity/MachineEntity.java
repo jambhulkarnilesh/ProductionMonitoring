@@ -44,17 +44,18 @@ public class MachineEntity extends AuditEnabledEntity {
     @Schema(example = "REMARK")
     private String remark;
     @Column(name = "status")
-    private String status;
+    private String statusCd;
 
     @Builder(builderMethodName = "machineEntityBuilder")
-    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType,  String machineMaxCapacity, String remark, String status, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
+    public MachineEntity(Integer machineId, String machineName, String machineIpAddress, String machinePortNo, String machinePLCType,  String machineMaxCapacity, String remark, String statusCd, String createdUserId, Instant createdDate, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
+        this.machineId = machineId;
         this.machineName = machineName;
         this.machineIpAddress = machineIpAddress;
         this.machinePortNo = machinePortNo;
         this.machinePLCType = machinePLCType;
         this.machineMaxCapacity = machineMaxCapacity;
         this.remark = remark;
-        this.status = status;
+        this.statusCd = statusCd;
     }
 }

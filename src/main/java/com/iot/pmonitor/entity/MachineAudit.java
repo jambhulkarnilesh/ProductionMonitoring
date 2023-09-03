@@ -47,7 +47,7 @@ public class MachineAudit extends AuditEnabledEntity {
     @Schema(example = "REMARK")
     private String remark;
     @Column(name = "status")
-    private String status;
+    private String statusCd;
 
     public MachineAudit(MachineEntity machineEntity) {
         super(machineEntity.getCreatedDate(), machineEntity.getCreatedUserId(), machineEntity.getUpdatedDate(), machineEntity.getUpdatedUserId());
@@ -58,6 +58,6 @@ public class MachineAudit extends AuditEnabledEntity {
         this.machinePLCType = machineEntity.getMachinePLCType();
         this.machineMaxCapacity = machineEntity.getMachineMaxCapacity();
         this.remark = machineEntity.getRemark();
-        this.status = machineEntity.getStatus();
+        this.statusCd = machineEntity.getStatusCd();
     }
 }

@@ -16,7 +16,7 @@ public interface PartRepo extends JpaRepository<PartEntity, Integer> {
 
     public Page<PartEntity> findByPartName(String partName, Pageable pageable);
 
-    public Page<PartEntity> findByStatus(String status, Pageable pageable);
+    public Page<PartEntity> findByStatusCd(String status, Pageable pageable);
 
     @Modifying
     @Query(value = SQLQueryConstants.UPDATE_ASSIGNED_JOB_PART, nativeQuery = true)

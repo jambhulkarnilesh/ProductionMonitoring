@@ -13,5 +13,5 @@ public interface MachineRepo extends JpaRepository<MachineEntity, Integer> {
 
     public Page<MachineEntity> findByMachineName(String machineName, Pageable pageable);
 
-    public Page<MachineEntity> findByStatus(String status, Pageable pageable);
+    public Page<MachineEntity> findByStatusCd(String status, Pageable pageable);
 }

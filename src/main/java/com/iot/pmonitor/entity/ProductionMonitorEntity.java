@@ -43,16 +43,13 @@ public class ProductionMonitorEntity extends AuditEnabledEntity {
     @Column(name = "MACH_JOB_STATUS")
     private String machJobStatus;
 
-    @Column(name = "MACH_JOB_COMPLETED")
-    private String isCompleted;
-
     @Schema(example = "REMARK")
     private String remark;
     @Column(name = "status")
-    private String status;
+    private String statusCd;
 
     @Builder(builderMethodName = "productionMonitorEntityBuilder")
-    public ProductionMonitorEntity(Integer machineId, String machineName, String machineStatus, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, String isCompleted, String remark, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public ProductionMonitorEntity(Integer machineId, String machineName, String machineStatus, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machJobStatus, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.machineId = machineId;
         this.machineName = machineName;
@@ -62,8 +59,7 @@ public class ProductionMonitorEntity extends AuditEnabledEntity {
         this.machTargetJobCount = machTargetJobCount;
         this.machCompletedJobCount = machCompletedJobCount;
         this.machJobStatus = machJobStatus;
-        this.isCompleted = isCompleted;
         this.remark = remark;
-        this.status = status;
+        this.statusCd = statusCd;
     }
 }

@@ -39,7 +39,7 @@ public class PartAudit extends AuditEnabledEntity {
     @Schema(example = "REMARK")
     private String remark;
     @Column(name = "status")
-    private String status;
+    private String statusCd;
 
     public PartAudit(PartEntity partEntity) {
         super(partEntity.getCreatedDate(), partEntity.getCreatedUserId(), partEntity.getUpdatedDate(), partEntity.getUpdatedUserId());
@@ -49,6 +49,6 @@ public class PartAudit extends AuditEnabledEntity {
         this.partJobAssigned = partEntity.getPartJobAssigned();
         this.partJobAssigned = partEntity.getPartJobAssigned();
         this.remark = partEntity.getRemark();
-        this.status = partEntity.getStatus();
+        this.statusCd = partEntity.getStatusCd();
     }
 }

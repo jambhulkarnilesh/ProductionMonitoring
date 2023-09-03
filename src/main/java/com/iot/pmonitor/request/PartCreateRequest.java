@@ -1,17 +1,10 @@
 package com.iot.pmonitor.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PartRequest {
-
-    @Schema(example = "1", description = "This field is used for Part Id")
-    private Integer partId;
+public class PartCreateRequest {
 
     @Schema(example = "Nozzel", description = "This field is used for Part Name")
     private String partName;
@@ -26,7 +19,7 @@ public class PartRequest {
     private String remark;
 
     @Schema(example = "A", description = "This field is used for Status i.e A or I")
-    private String status;
+    private String statusCd;
 
     @Schema(example = "PM", description = "This field is used for Created User Id")
     private String employeeId;

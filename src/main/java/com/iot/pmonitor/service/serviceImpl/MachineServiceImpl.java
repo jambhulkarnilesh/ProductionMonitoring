@@ -7,7 +7,8 @@ import com.iot.pmonitor.enums.SearchEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.MachineAuditRepo;
 import com.iot.pmonitor.repository.MachineRepo;
-import com.iot.pmonitor.request.MachineRequest;
+import com.iot.pmonitor.request.MachineCreateRequest;
+import com.iot.pmonitor.request.MachineUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.MachineService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -28,8 +29,8 @@ public class MachineServiceImpl implements MachineService {
     private MachineAuditRepo machineAuditRepo;
 
     @Override
-    public PMResponse saveMachine(MachineRequest machineRequest) {
-        MachineEntity machineEntity = convertMachineRequestToEntity(machineRequest);
+    public PMResponse saveMachine(MachineCreateRequest machineCreateRequest) {
+        MachineEntity machineEntity = convertMachineCreateRequestToEntity(machineCreateRequest);
         try {
             machineRepo.save(machineEntity);
             MachineAudit machineAudit = new MachineAudit(machineEntity);
@@ -40,6 +41,23 @@ public class MachineServiceImpl implements MachineService {
                     .build();
         } catch (Exception ex) {
             log.error("Inside MachineServiceImpl >> saveMachine()");
+            throw new PMException("MachineServiceImpl", false, ex.getMessage());
+        }
+    }
+
+    @Override
+    public PMResponse updateMachine(MachineUpdateRequest machineUpdateRequest) {
+        MachineEntity machineEntity = convertMachineUpdateRequestToEntity(machineUpdateRequest);
+        try {
+            machineRepo.save(machineEntity);
+            MachineAudit machineAudit = new MachineAudit(machineEntity);
+            machineAuditRepo.save(machineAudit);
+            return PMResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage(PMConstants.RECORD_UPDATE)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside MachineServiceImpl >> updateMachine()");
             throw new PMException("MachineServiceImpl", false, ex.getMessage());
         }
     }
@@ -56,7 +74,7 @@ public class MachineServiceImpl implements MachineService {
                 machineEntities = machineRepo.findByMachineName(searchString, pageable);
                 break;
             case "BY_STATUS":
-                machineEntities = machineRepo.findByStatus(searchString, pageable);
+                machineEntities = machineRepo.findByStatusCd(searchString, pageable);
                 break;
             default:
                 machineEntities = machineRepo.findAll(pageable);
@@ -68,16 +86,30 @@ public class MachineServiceImpl implements MachineService {
                 .build();
     }
 
-    private MachineEntity convertMachineRequestToEntity(MachineRequest machineRequest) {
+    private MachineEntity convertMachineCreateRequestToEntity(MachineCreateRequest machineCreateRequest) {
         return MachineEntity.machineEntityBuilder()
-                .machineName(machineRequest.getMachineName())
-                .machineIpAddress(machineRequest.getMachineIpAddress())
-                .machinePortNo(machineRequest.getMachinePortNo())
-                .machinePLCType(machineRequest.getMachinePLCType())
-                .machineMaxCapacity(machineRequest.getMachineMaxCapacity())
-                .remark(machineRequest.getRemark())
-                .status(machineRequest.getStatus())
-                .createdUserId(machineRequest.getEmployeeId())
+                .machineName(machineCreateRequest.getMachineName())
+                .machineIpAddress(machineCreateRequest.getMachineIpAddress())
+                .machinePortNo(machineCreateRequest.getMachinePortNo())
+                .machinePLCType(machineCreateRequest.getMachinePLCType())
+                .machineMaxCapacity(machineCreateRequest.getMachineMaxCapacity())
+                .remark(machineCreateRequest.getRemark())
+                .statusCd(machineCreateRequest.getStatusCd())
+                .createdUserId(machineCreateRequest.getEmployeeId())
+                .build();
+    }
+
+    private MachineEntity convertMachineUpdateRequestToEntity(MachineUpdateRequest machineUpdateRequest) {
+        return MachineEntity.machineEntityBuilder()
+                .machineId(machineUpdateRequest.getMachineId())
+                .machineName(machineUpdateRequest.getMachineName())
+                .machineIpAddress(machineUpdateRequest.getMachineIpAddress())
+                .machinePortNo(machineUpdateRequest.getMachinePortNo())
+                .machinePLCType(machineUpdateRequest.getMachinePLCType())
+                .machineMaxCapacity(machineUpdateRequest.getMachineMaxCapacity())
+                .remark(machineUpdateRequest.getRemark())
+                .statusCd(machineUpdateRequest.getStatusCd())
+                .createdUserId(machineUpdateRequest.getEmployeeId())
                 .build();
     }
 }

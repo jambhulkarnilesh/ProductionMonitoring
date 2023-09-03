@@ -47,13 +47,10 @@ public class ProductionMonitorAudit extends AuditEnabledEntity {
     @Column(name = "MACH_JOB_STATUS")
     private String machJobStatus;
 
-    @Column(name = "MACH_JOB_COMPLETED")
-    private String isCompleted;
-
     @Schema(example = "REMARK")
     private String remark;
     @Column(name = "status")
-    private String status;
+    private String statusCd;
 
     public ProductionMonitorAudit(ProductionMonitorEntity monitorEntity) {
         super(monitorEntity.getCreatedDate(), monitorEntity.getCreatedUserId(), monitorEntity.getUpdatedDate(), monitorEntity.getUpdatedUserId());
@@ -63,9 +60,8 @@ public class ProductionMonitorAudit extends AuditEnabledEntity {
         this.machTargetJobCount = monitorEntity.getMachTargetJobCount();
         this.machCompletedJobCount = monitorEntity.getMachCompletedJobCount();
         this.machJobStatus = monitorEntity.getMachJobStatus();
-        this.isCompleted = monitorEntity.getIsCompleted();
         this.remark =monitorEntity.getRemark();
-        this.status = monitorEntity.getStatus();
+        this.statusCd = monitorEntity.getStatusCd();
     }
 }
 

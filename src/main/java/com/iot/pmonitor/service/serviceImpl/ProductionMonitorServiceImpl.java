@@ -128,9 +128,8 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
                 .partName(getPartName(monitorRequest.getPartId()))
                 .machTargetJobCount(monitorRequest.getMachTargetJobCount())
                 .machCompletedJobCount(monitorRequest.getMachCompletedJobCount())
-                .isCompleted(monitorRequest.getIsCompleted())
                 .remark(monitorRequest.getRemark())
-                .status(monitorRequest.getStatus())
+                .statusCd(monitorRequest.getStatusCd())
                 .createdUserId(monitorRequest.getEmployeeId())
                 .build();
     }
@@ -164,7 +163,7 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
         partAudit.setPartName(partName);
         partAudit.setPartJobTarget(partJobTarget);
         partAudit.setPartJobAssigned(totalPartJobAssigned.toString());
-        partAudit.setStatus("A");
+        partAudit.setStatusCd("A");
         //partAudit.setUpdatedDate();
         partAudit.setRemark("Part job assigned for macheine : "+totalPartJobAssigned);
         partAuditRepo.save(partAudit);

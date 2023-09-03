@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
@@ -22,6 +24,7 @@ import java.time.Instant;
 public class PartEntity extends AuditEnabledEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PART_ID")
     private Integer partId;
 
@@ -34,20 +37,19 @@ public class PartEntity extends AuditEnabledEntity {
     @Column(name = "PART_JOB_ASSIGNED")
     private String partJobAssigned;
 
-
     @Schema(example = "REMARK")
     private String remark;
     @Column(name = "status")
-    private String status;
+    private String statusCd;
 
     @Builder(builderMethodName = "partEntityBuilder")
-    public PartEntity(Integer partId, String partName, String partJobTarget, String partJobAssigned, String remark, String status, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public PartEntity(Integer partId, String partName, String partJobTarget, String partJobAssigned, String remark, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.partId = partId;
         this.partName = partName;
         this.partJobTarget = partJobTarget;
         this.partJobAssigned = partJobAssigned;
         this.remark = remark;
-        this.status = status;
+        this.statusCd = statusCd;
     }
 }

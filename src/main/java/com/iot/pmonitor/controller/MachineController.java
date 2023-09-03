@@ -2,7 +2,8 @@ package com.iot.pmonitor.controller;
 
 import com.iot.pmonitor.enums.PageDirection;
 import com.iot.pmonitor.enums.SearchEnum;
-import com.iot.pmonitor.request.MachineRequest;
+import com.iot.pmonitor.request.MachineCreateRequest;
+import com.iot.pmonitor.request.MachineUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.MachineService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,14 +31,20 @@ public class MachineController {
     private MachineService machineService;
 
     @PostMapping
-    public ResponseEntity saveMachineDetails(@RequestBody MachineRequest machineRequest) {
+    public ResponseEntity<PMResponse> saveMachineDetails(@RequestBody MachineCreateRequest machineRequest) {
         PMResponse response = machineService.saveMachine(machineRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<PMResponse> updateMachineDetails(@RequestBody MachineUpdateRequest machineUpdateRequest) {
+        PMResponse response = machineService.updateMachine(machineUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
     @PageableAsQueryParam
-    public ResponseEntity getMachineDetails(@RequestParam(required = false) SearchEnum searchEnum,
+    public ResponseEntity<PMResponse> getMachineDetails(@RequestParam(required = false) SearchEnum searchEnum,
                                             @RequestParam(required = false) String searchString,
                                             @Parameter(hidden = true) Pageable pageable,
                                             @Parameter(hidden = true) PageDirection pageDirection,

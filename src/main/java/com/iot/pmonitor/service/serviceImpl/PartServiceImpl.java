@@ -7,7 +7,8 @@ import com.iot.pmonitor.enums.SearchEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.PartAuditRepo;
 import com.iot.pmonitor.repository.PartRepo;
-import com.iot.pmonitor.request.PartRequest;
+import com.iot.pmonitor.request.PartCreateRequest;
+import com.iot.pmonitor.request.PartUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.PartService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -29,8 +30,8 @@ public class PartServiceImpl implements PartService {
     private PartAuditRepo partAuditRepo;
 
     @Override
-    public PMResponse savePart(PartRequest partRequest) {
-        PartEntity partEntity = convertPartRequestToEntity(partRequest);
+    public PMResponse savePart(PartCreateRequest partCreateRequest) {
+        PartEntity partEntity = convertPartCreateRequestToEntity(partCreateRequest);
         try {
             partRepo.save(partEntity);
             PartAudit partAudit = new PartAudit(partEntity);
@@ -41,6 +42,23 @@ public class PartServiceImpl implements PartService {
                     .build();
         } catch (Exception ex) {
             log.error("Inside PartServiceImpl >> savePart()");
+            throw new PMException("PartServiceImpl", false, ex.getMessage());
+        }
+    }
+
+    @Override
+    public PMResponse updatePart(PartUpdateRequest partUpdateRequest) {
+        PartEntity partEntity = convertPartUpdateRequestToEntity(partUpdateRequest);
+        try {
+            partRepo.save(partEntity);
+            PartAudit partAudit = new PartAudit(partEntity);
+            partAuditRepo.save(partAudit);
+            return PMResponse.builder()
+                    .isSuccess(true)
+                    .responseMessage(PMConstants.RECORD_UPDATE)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside PartServiceImpl >> updatePart()");
             throw new PMException("PartServiceImpl", false, ex.getMessage());
         }
     }
@@ -57,7 +75,7 @@ public class PartServiceImpl implements PartService {
                 partEntities = partRepo.findByPartName(searchString, pageable);
                 break;
             case "BY_STATUS":
-                partEntities = partRepo.findByStatus(searchString, pageable);
+                partEntities = partRepo.findByStatusCd(searchString, pageable);
                 break;
             case "ALL":
             default:
@@ -70,15 +88,26 @@ public class PartServiceImpl implements PartService {
                 .build();
     }
 
-    private PartEntity convertPartRequestToEntity(PartRequest partRequest) {
+    private PartEntity convertPartCreateRequestToEntity(PartCreateRequest partCreateRequest) {
         return PartEntity.partEntityBuilder()
-                .partId(partRequest.getPartId())
-                .partName(partRequest.getPartName())
-                .partJobTarget(partRequest.getPartJobTarget())
-                .partJobAssigned(partRequest.getPartJobAssigned())
-                .remark(partRequest.getRemark())
-                .status(partRequest.getStatus())
-                .createdUserId(partRequest.getEmployeeId())
+                .partName(partCreateRequest.getPartName())
+                .partJobTarget(partCreateRequest.getPartJobTarget())
+                .partJobAssigned(partCreateRequest.getPartJobAssigned())
+                .remark(partCreateRequest.getRemark())
+                .statusCd(partCreateRequest.getStatusCd())
+                .createdUserId(partCreateRequest.getEmployeeId())
+                .build();
+    }
+
+    private PartEntity convertPartUpdateRequestToEntity(PartUpdateRequest partUpdateRequest) {
+        return PartEntity.partEntityBuilder()
+                .partId(partUpdateRequest.getPartId())
+                .partName(partUpdateRequest.getPartName())
+                .partJobTarget(partUpdateRequest.getPartJobTarget())
+                .partJobAssigned(partUpdateRequest.getPartJobAssigned())
+                .remark(partUpdateRequest.getRemark())
+                .statusCd(partUpdateRequest.getStatusCd())
+                .createdUserId(partUpdateRequest.getEmployeeId())
                 .build();
     }
 }
