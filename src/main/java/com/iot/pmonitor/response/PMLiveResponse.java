@@ -20,6 +20,10 @@ public class PMLiveResponse {
     private String machCompletedJobCount;
     private String machBalanceJobCount;
 
+    private String machMaxCapacity;
+
+    private String machCapacityStatus;
+
     public PMLiveResponse(Object[] objects) {
 
         this.machineId = Objects.nonNull(objects[0]) ? Integer.parseInt(String.valueOf(objects[0])) : null;

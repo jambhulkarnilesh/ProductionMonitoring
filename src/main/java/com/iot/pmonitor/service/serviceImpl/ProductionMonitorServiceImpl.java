@@ -73,14 +73,35 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
 
     @Override
     public List<PMLiveResponse> getLivePMDetails() {
-        List<PMLiveResponse> productionHeaderResponses = null;
-        List<Object[]> productionHeaderData = productionMonitorRepo.getProductionMonitor();
-        if (!CollectionUtils.isEmpty(productionHeaderData)) {
-            productionHeaderResponses = productionHeaderData.stream()
+        List<PMLiveResponse> productionMonitorResponses = null;
+        List<Object[]> productionMonitorData = productionMonitorRepo.getProductionMonitor();
+        if (!CollectionUtils.isEmpty(productionMonitorData)) {
+            productionMonitorResponses = productionMonitorData.stream()
                     .map(PMLiveResponse::new)
                     .collect(Collectors.toList());
         }
-        return productionHeaderResponses;
+        for (PMLiveResponse pmLiveResponse : productionMonitorResponses) {
+            Integer targetJobCount = Integer.parseInt(pmLiveResponse.getMachTargetJobCount());
+            Integer machineMaxCapacity = Integer.parseInt(getMachineInfo(pmLiveResponse.getMachineId()));
+            pmLiveResponse.setMachMaxCapacity(machineMaxCapacity.toString());
+            Integer overloadedByCount = 0;
+            if (targetJobCount > machineMaxCapacity) {
+                overloadedByCount = targetJobCount - machineMaxCapacity;
+                pmLiveResponse.setMachCapacityStatus("Jobs Overloaded By : " + overloadedByCount);
+            } else {
+                overloadedByCount = machineMaxCapacity - targetJobCount;
+                pmLiveResponse.setMachCapacityStatus("Jobs Underloaded By : " + overloadedByCount);
+            }
+        }
+        return productionMonitorResponses;
+}
+
+    private String getMachineInfo(Integer machineId) {
+        Optional<MachineEntity> optionalMachine = machineRepo.findById(machineId);
+        if (optionalMachine.isPresent()) {
+            return optionalMachine.get().getMachineMaxCapacity();
+        }
+        return "0";
     }
 
     @Override
@@ -165,7 +186,7 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
         partAudit.setPartJobAssigned(totalPartJobAssigned.toString());
         partAudit.setStatusCd("A");
         //partAudit.setUpdatedDate();
-        partAudit.setRemark("Part job assigned for macheine : "+totalPartJobAssigned);
+        partAudit.setRemark("Part job assigned for macheine : " + totalPartJobAssigned);
         partAuditRepo.save(partAudit);
     }
 
