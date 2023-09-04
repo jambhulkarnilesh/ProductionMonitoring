@@ -1,7 +1,7 @@
 package com.iot.pmonitor.controller;
 
 import com.iot.pmonitor.enums.PageDirection;
-import com.iot.pmonitor.request.PMSearch;
+import com.iot.pmonitor.model.PMSearchModel;
 import com.iot.pmonitor.request.PMSearchRequest;
 import com.iot.pmonitor.request.ProductionMonitorRequest;
 import com.iot.pmonitor.response.PMLiveResponse;
@@ -48,7 +48,7 @@ public class ProductionMonitorController {
                                          @Parameter(hidden = true) Pageable pageable,
                                          @Parameter(hidden = true) PageDirection pageDirection,
                                          @Parameter(hidden = true) String sortParam) {
-        PMSearch pmSearchCriteria = PMSearch.builder()
+        PMSearchModel pmSearchModel = PMSearchModel.builder()
                 .fromDate(pmSearchRequest.getFromDate())
                 .toDate(pmSearchRequest.getToDate())
                 .machineId(pmSearchRequest.getMachineId())
@@ -64,7 +64,7 @@ public class ProductionMonitorController {
                 .sortDirection(PMUtils.getDirection(pageDirection))
                 .sortName(sortParam)
                 .build();
-        PMResponse response = monitorService.findPMDetails(pmSearchCriteria);
+        PMResponse response = monitorService.findPMDetails(pmSearchModel);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

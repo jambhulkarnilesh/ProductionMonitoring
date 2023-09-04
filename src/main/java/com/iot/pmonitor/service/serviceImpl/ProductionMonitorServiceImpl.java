@@ -7,12 +7,12 @@ import com.iot.pmonitor.entity.PartEntity;
 import com.iot.pmonitor.entity.ProductionMonitorAudit;
 import com.iot.pmonitor.entity.ProductionMonitorEntity;
 import com.iot.pmonitor.exception.PMException;
+import com.iot.pmonitor.model.PMSearchModel;
 import com.iot.pmonitor.repository.MachineRepo;
 import com.iot.pmonitor.repository.PartAuditRepo;
 import com.iot.pmonitor.repository.PartRepo;
 import com.iot.pmonitor.repository.ProductionMonitorAuditRepo;
 import com.iot.pmonitor.repository.ProductionMonitorRepo;
-import com.iot.pmonitor.request.PMSearch;
 import com.iot.pmonitor.request.ProductionMonitorRequest;
 import com.iot.pmonitor.response.PMLiveResponse;
 import com.iot.pmonitor.response.PMReportResponse;
@@ -105,32 +105,32 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
     }
 
     @Override
-    public PMResponse findPMDetails(PMSearch pmSearch) {
+    public PMResponse findPMDetails(PMSearchModel pmSearchModel) {
         List<PMReportResponse> pmReportResponses = null;
-        Integer pageSize = pmSearch.getPageable().getPageSize();
-        Integer pageOffset = (int) pmSearch.getPageable().getOffset();
+        Integer pageSize = pmSearchModel.getPageable().getPageSize();
+        Integer pageOffset = (int) pmSearchModel.getPageable().getOffset();
 
-        String pmFromDate = null == pmSearch.getFromDate() ? DateTimeUtils.getFirstDayOfCurrentMonth() : pmSearch.getFromDate();
-        String pmToDate = null == pmSearch.getToDate() ? LocalDate.now().toString() : pmSearch.getToDate();
+        String pmFromDate = null == pmSearchModel.getFromDate() ? DateTimeUtils.getFirstDayOfCurrentMonth() : pmSearchModel.getFromDate();
+        String pmToDate = null == pmSearchModel.getToDate() ? LocalDate.now().toString() : pmSearchModel.getToDate();
 
         String sortName = null;
         //String sortDirection = null;
 
-        Optional<Sort.Order> order = pmSearch.getPageable().getSort().get().findFirst();
+        Optional<Sort.Order> order = pmSearchModel.getPageable().getSort().get().findFirst();
 
         if (order.isPresent()) {
             sortName = order.get().getProperty();  // order by this field
             // sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
         }
-        List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), sortName, pageSize, pageOffset);
+        List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearchModel.getMachineId(), pmSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), sortName, pageSize, pageOffset);
 
         if (!CollectionUtils.isEmpty(pmData)) {
             pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
         }
 
-        long totalRecords = monitorAuditRepo.getCountAllProductionMonitor(pmFromDate, pmToDate, pmSearch.getMachineId(), pmSearch.getMachineName(), pmSearch.getMachinePLCType(), pmSearch.getPartId(), pmSearch.getPartName(), pmSearch.getMachTargetJobCount(), pmSearch.getMachCompletedJobCount(), pmSearch.getMachineStatus(), pmSearch.getMachJobStatus());
+        long totalRecords = monitorAuditRepo.getCountAllProductionMonitor(pmFromDate, pmToDate, pmSearchModel.getMachineId(), pmSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), pmSearchModel.getMachJobStatus());
 
-        PageImpl<PMReportResponse> reportResponses = new PageImpl<>(pmReportResponses, pmSearch.getPageable(), totalRecords);
+        PageImpl<PMReportResponse> reportResponses = new PageImpl<>(pmReportResponses, pmSearchModel.getPageable(), totalRecords);
         return PMResponse.builder()
                 .isSuccess(true)
                 .responseData(reportResponses)

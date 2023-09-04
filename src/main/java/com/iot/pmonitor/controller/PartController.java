@@ -38,14 +38,14 @@ public class PartController {
     }
 
     @PutMapping
-    public ResponseEntity<PMResponse> savePartDetails(@RequestBody PartUpdateRequest partUpdateRequest) {
+    public ResponseEntity<PMResponse> updatePartDetails(@RequestBody PartUpdateRequest partUpdateRequest) {
         PMResponse response = partService.updatePart(partUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
     @PageableAsQueryParam
-    public ResponseEntity<PMResponse> getPartDetails(@RequestParam(required = false) SearchEnum searchEnum,
+    public ResponseEntity<PMResponse> findPartDetails(@RequestParam(required = false) SearchEnum searchEnum,
                                          @RequestParam(required = false) String searchString,
                                          @Parameter(hidden = true) Pageable pageable,
                                          @Parameter(hidden = true) PageDirection pageDirection,

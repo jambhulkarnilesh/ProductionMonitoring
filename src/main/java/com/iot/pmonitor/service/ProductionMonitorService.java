@@ -1,6 +1,6 @@
 package com.iot.pmonitor.service;
 
-import com.iot.pmonitor.request.PMSearch;
+import com.iot.pmonitor.model.PMSearchModel;
 import com.iot.pmonitor.request.ProductionMonitorRequest;
 import com.iot.pmonitor.response.PMLiveResponse;
 import com.iot.pmonitor.response.PMResponse;
@@ -13,5 +13,5 @@ public interface ProductionMonitorService {
 
     public List<PMLiveResponse> getLivePMDetails();
 
-    public PMResponse findPMDetails(PMSearch pmSearchCriteria);
+    public PMResponse findPMDetails(PMSearchModel pmSearchModel);
 }

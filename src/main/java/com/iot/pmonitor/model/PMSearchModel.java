@@ -1,4 +1,4 @@
-package com.iot.pmonitor.request;
+package com.iot.pmonitor.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 @Data
 @Builder
-public class PMSearch {
+public class PMSearchModel {
 
     private Pageable pageable;
     private Integer pageSize;
@@ -24,6 +24,4 @@ public class PMSearch {
     private String machTargetJobCount;
     private String machCompletedJobCount;
     private String machJobStatus;
-
-
 }

@@ -97,6 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeEntity convertEmployeeCreateRequestToEntity(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
                 .depId(employeeCreateRequest.getDepId())
+                .desigId(employeeCreateRequest.getDesigId())
                 .roleId(employeeCreateRequest.getRoleId())
                 .empFirstName(employeeCreateRequest.getEmpFirstName())
                 .empMiddleName(employeeCreateRequest.getEmpMiddleName())
@@ -120,6 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeEntity.employeeEntityBuilder()
                 .empId(employeeUpdateRequest.getEmpId())
                 .depId(employeeUpdateRequest.getDepId())
+                .desigId(employeeUpdateRequest.getDesigId())
                 .roleId(employeeUpdateRequest.getRoleId())
                 .empFirstName(employeeUpdateRequest.getEmpFirstName())
                 .empMiddleName(employeeUpdateRequest.getEmpMiddleName())
