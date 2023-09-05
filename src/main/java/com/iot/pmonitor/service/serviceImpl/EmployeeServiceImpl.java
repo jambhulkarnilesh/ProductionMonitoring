@@ -3,10 +3,14 @@ package com.iot.pmonitor.service.serviceImpl;
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.EmployeeAudit;
 import com.iot.pmonitor.entity.EmployeeEntity;
+import com.iot.pmonitor.entity.EmployeeLoginAudit;
+import com.iot.pmonitor.entity.EmployeeLoginEntity;
 import com.iot.pmonitor.enums.EmployeeSearchEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.EmployeeAuditRepo;
+import com.iot.pmonitor.repository.EmployeeLoginAuditRepo;
+import com.iot.pmonitor.repository.EmployeeLoginRepo;
 import com.iot.pmonitor.repository.EmployeeRepo;
 import com.iot.pmonitor.request.EmployeeCreateRequest;
 import com.iot.pmonitor.request.EmployeeUpdateRequest;
@@ -28,10 +32,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepo employeeRepo;
-
-
     @Autowired
     private EmployeeAuditRepo employeeAuditRepo;
+
+    @Autowired
+    private EmployeeLoginRepo employeeLoginRepo;
+
+    @Autowired
+    private EmployeeLoginAuditRepo employeeLoginAuditRepo;
+
 
     @Override
     public PMResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
@@ -41,6 +50,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeRepo.save(employeeEntity);
             EmployeeAudit employeeAudit = new EmployeeAudit(employeeEntity);
             employeeAuditRepo.save(employeeAudit);
+
+            EmployeeLoginEntity employeeLoginEntity = convertRequestToEmployeeLogin(employeeCreateRequest);
+            employeeLoginRepo.save(employeeLoginEntity);
+            EmployeeLoginAudit employeeLoginAudit = new EmployeeLoginAudit(employeeLoginEntity);
+            employeeLoginAuditRepo.save(employeeLoginAudit);
             return PMResponse.builder()
                     .isSuccess(true)
                     .responseMessage(PMConstants.RECORD_SUCCESS)
@@ -67,6 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new PMException("EmployeeServiceImpl", false, ex.getMessage());
         }
     }
+
 
     @Override
     public PMResponse findEmployee(EmployeeSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
@@ -105,6 +120,18 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .isSuccess(true)
                 .responseData(partEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
+                .build();
+    }
+
+    private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
+        return EmployeeLoginEntity.employeeLoginEntityBuilder()
+                .empMobileNo(employeeCreateRequest.getEmpMobileNo())
+                .emailId(employeeCreateRequest.getEmailId())
+                .roleId(employeeCreateRequest.getRoleId())
+                .empPassword(employeeCreateRequest.getEmpMobileNo())
+                .remark(employeeCreateRequest.getRemark())
+                .statusCd(employeeCreateRequest.getStatusCd())
+                .createdUserId(employeeCreateRequest.getEmployeeId())
                 .build();
     }
 

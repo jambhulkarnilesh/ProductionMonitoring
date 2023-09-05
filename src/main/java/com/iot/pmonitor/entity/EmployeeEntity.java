@@ -23,16 +23,16 @@ public class EmployeeEntity extends AuditEnabledEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "emp_id")
-	private int empId;
+	private Integer empId;
 
 	@Column(name = "dept_id")
-	private int deptId;
+	private Integer deptId;
 
 	@Column(name = "desig_id")
-	private int desigId;
+	private Integer desigId;
 
 	@Column(name = "role_id")
-	private int roleId;
+	private Integer roleId;
 
 	@Column(name = "emp_fname")
 	private String empFirstName;

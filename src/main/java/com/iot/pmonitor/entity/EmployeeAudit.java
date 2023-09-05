@@ -21,19 +21,19 @@ public class EmployeeAudit extends AuditEnabledEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "emp_aud_id")
-    private int empAuditId;
+    private Integer empAuditId;
 
     @Column(name = "emp_id")
-    private int empId;
+    private Integer empId;
 
     @Column(name = "dept_id")
-    private int depId;
+    private Integer depId;
 
     @Column(name = "desig_id")
-    private int desigId;
+    private Integer desigId;
 
     @Column(name = "role_id")
-    private int roleId;
+    private Integer roleId;
 
     @Column(name = "emp_fname")
     private String empFirstName;
