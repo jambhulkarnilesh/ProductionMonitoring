@@ -26,8 +26,8 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     }
 
     @Override
-    public PMResponse employeeLogin(String userName, String userPassword) {
-        Optional<EmployeeLoginEntity> employeeLoginEntity = employeeLoginRepo.findByEmpMobileNoAndEmpPasswordAndStatusCd(userName, userPassword, "A");
+    public PMResponse employeeLogin(String userName, String userPassword, Integer roleId) {
+        Optional<EmployeeLoginEntity> employeeLoginEntity = employeeLoginRepo.findByEmpMobileNoAndEmpPasswordAndRoleIdAndStatusCd(userName, userPassword, roleId,"A");
         if (employeeLoginEntity.isPresent()) {
             return PMResponse.builder()
                     .isSuccess(true)

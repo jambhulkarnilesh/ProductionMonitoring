@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface EmployeeLoginRepo extends JpaRepository<EmployeeLoginEntity, Integer> {
 
-    public Optional<EmployeeLoginEntity> findByEmpMobileNoAndEmpPasswordAndStatusCd(String empMobileNo, String empPassword, String statusCd);
+    public Optional<EmployeeLoginEntity> findByEmpMobileNoAndEmpPasswordAndRoleIdAndStatusCd(String empMobileNo, String empPassword, Integer roleId, String statusCd);
 }
