@@ -298,30 +298,3 @@ create table recipes_audit(
 	lst_updt_ts TIMESTAMP null,
 	lst_updt_user_id VARCHAR(20) null
 );
-
-create table employee_login(
-    emp_mbno VARCHAR(20)  PRIMARY key,
-	emp_email_id VARCHAR(20),
-	role_id INTEGER,
-	EMP_PASSWORD VARCHAR(20),
-    REMARK VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
-
-create table employee_login_audit(
-	emp_audit_login_id serial  PRIMARY key,
-    emp_mbno VARCHAR(20) ,
-	emp_email_id VARCHAR(20),
-	role_id INTEGER,
-	EMP_PASSWORD VARCHAR(20),
-    REMARK VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
