@@ -43,7 +43,7 @@ public class MachineController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> getMachineDetails(@RequestParam(required = false) MachineSearchEnum searchEnum,
                                                         @RequestParam(required = false) String searchString,

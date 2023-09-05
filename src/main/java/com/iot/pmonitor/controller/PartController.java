@@ -44,7 +44,7 @@ public class PartController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> findPartDetails(@RequestParam(required = false) PartSearchEnum searchEnum,
                                          @RequestParam(required = false) String searchString,

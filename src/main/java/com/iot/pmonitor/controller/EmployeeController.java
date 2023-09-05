@@ -38,7 +38,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.updateEmployee(employeeUpdateRequest));
     }
 
-    @GetMapping
+    @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> getAllEmployee(@RequestParam(required = false) EmployeeSearchEnum searchEnum,
                                                      @RequestParam(required = false) String searchString,

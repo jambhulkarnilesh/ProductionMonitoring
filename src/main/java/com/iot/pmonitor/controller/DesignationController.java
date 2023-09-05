@@ -43,7 +43,7 @@ public class DesignationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> findDesignationDetails(@RequestParam(required = false) DesignationSearchEnum searchEnum,
                                                             @RequestParam(required = false) String searchString,

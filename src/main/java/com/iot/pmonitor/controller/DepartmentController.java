@@ -43,7 +43,7 @@ public class DepartmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> findDepartmentDetails(@RequestParam(required = false) DepartmentSearchEnum searchEnum,
                                                       @RequestParam(required = false) String searchString,

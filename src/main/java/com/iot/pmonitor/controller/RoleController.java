@@ -43,7 +43,7 @@ public class RoleController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> findRoleDetails(@RequestParam(required = false) RoleSearchEnum searchEnum,
                                                       @RequestParam(required = false) String searchString,
