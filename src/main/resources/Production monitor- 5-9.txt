@@ -8,7 +8,7 @@ drop TABLE roles_audit;
 DROP TABLE employee;
 DROP TABLE employee_audit;
 drop TABLE employee_login;
-DROP TABLE employee_login_audit;
+drop TABLE employee_login_audit;
 drop table production_monitor ;
 drop table production_monitor_audit ;
 drop table machine;
@@ -253,17 +253,6 @@ create table employee_audit(
 	lst_updt_user_id VARCHAR(20) null
 );
 
-create table employee_login(
-    LOGIN_ID serial  PRIMARY key,
-	EMP_ID INTEGER,
-	ROLE_ID INTEGER,
-    EMP_PASSWORD VARCHAR(100),
-    STATUS_CD VARCHAR(10),
-	crte_user_id VARCHAR(20) ,
-	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
-	lst_updt_ts TIMESTAMP null,
-	lst_updt_user_id VARCHAR(20) null
-);
 
 create table recipes(
     recep_id serial PRIMARY key,
@@ -292,6 +281,33 @@ create table recipes_audit(
 	mach_target_job_count VARCHAR(10),
     REMARK VARCHAR(100),
 	recep_status VARCHAR(10),
+    STATUS_CD VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+create table employee_login(
+    emp_mbno VARCHAR(20)  PRIMARY key,
+	emp_email_id VARCHAR(20),
+	role_id INTEGER,
+	EMP_PASSWORD VARCHAR(20),
+    REMARK VARCHAR(100),
+    STATUS_CD VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+create table employee_login_audit(
+	emp_audit_login_id serial  PRIMARY key,
+    emp_mbno VARCHAR(20) ,
+	emp_email_id VARCHAR(20),
+	role_id INTEGER,
+	EMP_PASSWORD VARCHAR(20),
+    REMARK VARCHAR(100),
     STATUS_CD VARCHAR(10),
 	crte_user_id VARCHAR(20) ,
 	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
