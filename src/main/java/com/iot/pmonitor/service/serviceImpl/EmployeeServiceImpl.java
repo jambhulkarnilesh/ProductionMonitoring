@@ -3,8 +3,8 @@ package com.iot.pmonitor.service.serviceImpl;
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.EmployeeAudit;
 import com.iot.pmonitor.entity.EmployeeEntity;
-import com.iot.pmonitor.entity.PartEntity;
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.EmployeeSearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.EmployeeAuditRepo;
 import com.iot.pmonitor.repository.EmployeeRepo;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -70,18 +69,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public PMResponse findEmployee(SearchEnum searchEnum, String searchString, Pageable requestPageable, String sortParam, String pageDirection) {
+    public PMResponse findEmployee(EmployeeSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
         Page<EmployeeEntity> partEntities = null;
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                partEntities = employeeRepo.findByEmpId(Integer.parseInt(searchString), pageable);
+                partEntities = employeeRepo.findByEmpIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                partEntities = employeeRepo.findByEmpFirstName(searchString, pageable);
+                partEntities = employeeRepo.findByEmpFirstNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_DEPT_ID":
+                partEntities = employeeRepo.findByDeptIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_DESIG_ID":
+                partEntities = employeeRepo.findByDesigIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_ROLE_ID":
+                partEntities = employeeRepo.findByRoleIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_MOBILE_NO":
+                partEntities = employeeRepo.findByEmpMobileNoAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_GENDER":
+                partEntities = employeeRepo.findByEmpGenderAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
-                partEntities = employeeRepo.findByStatusCd(searchString, pageable);
+                partEntities = employeeRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
                 break;
             case "ALL":
             default:

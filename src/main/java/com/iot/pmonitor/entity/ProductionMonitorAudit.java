@@ -49,7 +49,7 @@ public class ProductionMonitorAudit extends AuditEnabledEntity {
 
     @Schema(example = "REMARK")
     private String remark;
-    @Column(name = "status")
+    @Column(name = "status_cd")
     private String statusCd;
 
     public ProductionMonitorAudit(ProductionMonitorEntity monitorEntity) {

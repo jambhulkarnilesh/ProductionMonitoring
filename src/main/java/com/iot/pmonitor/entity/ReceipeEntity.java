@@ -49,7 +49,7 @@ public class ReceipeEntity extends AuditEnabledEntity {
     @Schema(example = "recep_status")
     private String recepStatus;
 
-    @Column(name = "status")
+    @Column(name = "status_cd")
     private String statusCd;
 
     @Builder(builderMethodName = "receipeEntityBuilder")

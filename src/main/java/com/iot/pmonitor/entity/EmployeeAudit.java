@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.Instant;
 
 @Table(name = "employee_audit")
 @Entity
@@ -75,13 +74,13 @@ public class EmployeeAudit extends AuditEnabledEntity{
     @Column(name = "remark")
     private String remark;
 
-    @Column(name = "status")
+    @Column(name = "status_cd")
     private String statusCd;
 
     public EmployeeAudit(EmployeeEntity employeeEntity) {
         super(employeeEntity.getCreatedDate(), employeeEntity.getCreatedUserId(), employeeEntity.getUpdatedDate(), employeeEntity.getUpdatedUserId());
         this.empId = employeeEntity.getEmpId();
-        this.depId = employeeEntity.getDepId();
+        this.depId = employeeEntity.getDeptId();
         this.desigId = employeeEntity.getDesigId();
         this.roleId = employeeEntity.getRoleId();
         this.empFirstName = employeeEntity.getEmpFirstName();

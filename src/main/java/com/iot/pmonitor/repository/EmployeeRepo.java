@@ -8,10 +8,20 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
-    public Page<EmployeeEntity> findByEmpId(Integer empId, Pageable pageable);
+    public Page<EmployeeEntity> findByEmpIdAndStatusCd(Integer empId, String statusCd, Pageable pageable);
 
-    public Page<EmployeeEntity> findByEmpFirstName(String empId, Pageable pageable);
+    public Page<EmployeeEntity> findByEmpFirstNameAndStatusCd(String empFirstName, String statusCd, Pageable pageable);
 
-    public Page<EmployeeEntity> findByStatusCd(String empId, Pageable pageable);
+    public Page<EmployeeEntity> findByDeptIdAndStatusCd(Integer deptId, String statusCd, Pageable pageable);
+
+    public Page<EmployeeEntity> findByDesigIdAndStatusCd(Integer desigId, String statusCd, Pageable pageable);
+
+    public Page<EmployeeEntity> findByRoleIdAndStatusCd(Integer roleId, String statusCd, Pageable pageable);
+
+    public Page<EmployeeEntity> findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd, Pageable pageable);
+
+    public Page<EmployeeEntity> findByEmpGenderAndStatusCd(String  empGender, String statusCd, Pageable pageable);
+
+    public Page<EmployeeEntity> findByStatusCd(String statusCd, Pageable pageable);
 
 }

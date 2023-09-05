@@ -1,7 +1,8 @@
 package com.iot.pmonitor.controller;
 
 import com.iot.pmonitor.enums.PageDirection;
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.PartSearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.request.PartCreateRequest;
 import com.iot.pmonitor.request.PartUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
@@ -45,12 +46,13 @@ public class PartController {
 
     @GetMapping
     @PageableAsQueryParam
-    public ResponseEntity<PMResponse> findPartDetails(@RequestParam(required = false) SearchEnum searchEnum,
+    public ResponseEntity<PMResponse> findPartDetails(@RequestParam(required = false) PartSearchEnum searchEnum,
                                          @RequestParam(required = false) String searchString,
+                                         @RequestParam(required = false) StatusCdEnum statusCdEnum,
                                          @Parameter(hidden = true) Pageable pageable,
                                          @Parameter(hidden = true) PageDirection pageDirection,
                                          @Parameter(hidden = true) String sortParam) {
-        PMResponse response = partService.findPartDetails(searchEnum, searchString, pageable, sortParam, PMUtils.getDirection(pageDirection));
+        PMResponse response = partService.findPartDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

@@ -5,6 +5,8 @@ import com.iot.pmonitor.entity.PartAudit;
 import com.iot.pmonitor.entity.PartEntity;
 import com.iot.pmonitor.entity.ReceipeAudit;
 import com.iot.pmonitor.entity.ReceipeEntity;
+import com.iot.pmonitor.enums.PartSearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.model.ReceipesSearchModel;
 import com.iot.pmonitor.repository.ReceipesAuditRepo;
@@ -18,9 +20,12 @@ import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.response.RecipesResponse;
 import com.iot.pmonitor.service.RecipesService;
 import com.iot.pmonitor.utils.DateTimeUtils;
+import com.iot.pmonitor.utils.PMUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -75,38 +80,37 @@ public class ReceipesServiceImpl implements RecipesService {
     }
 
     @Override
-    public PMResponse findReceipesDetails(ReceipesSearchModel receipesSearchModel) {
-        List<RecipesResponse> pmReportResponses = null;
-      /*  Integer pageSize = receipesSearchModel.getPageable().getPageSize();
-        Integer pageOffset = (int) receipesSearchModel.getPageable().getOffset();
-
-        String recepFromDate = null == receipesSearchModel.getFromDate() ? DateTimeUtils.getFirstDayOfCurrentMonth() : receipesSearchModel.getFromDate();
-        String recepToDate = null == receipesSearchModel.getToDate() ? LocalDate.now().toString() : receipesSearchModel.getToDate();
-
-        String sortName = null;
-        //String sortDirection = null;
-
-        Optional<Sort.Order> order = receipesSearchModel.getPageable().getSort().get().findFirst();
-
-        if (order.isPresent()) {
-            sortName = order.get().getProperty();  // order by this field
-            // sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
+    public PMResponse findRecipesDetails(PartSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
+        Page<ReceipeEntity> receipeEntities = null;
+        Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
+        switch (searchEnum.getSearchType()) {
+            case "BY_ID":
+                receipeEntities = receipesRepo.findByRecepIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_EMP_ID":
+                receipeEntities = receipesRepo.findByEmpIdAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_MACHINE_ID":
+                receipeEntities = receipesRepo.findByMachineIdAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                break;
+            case "BY_PART_ID":
+                receipeEntities = receipesRepo.findByPartIdAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                break;
+            case "BY_STATUS":
+                receipeEntities = receipesRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
+                break;
+            case "ALL":
+            default:
+                receipeEntities = receipesRepo.findAll(pageable);
         }
-        List<Object[]> pmData = receipesAuditRepo.getAllProductionMonitor(recepFromDate, recepToDate, receipesSearchModel.getMachineId(), receipesSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), sortName, pageSize, pageOffset);
-
-        if (!CollectionUtils.isEmpty(pmData)) {
-            pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
-        }
-
-        long totalRecords = monitorAuditRepo.getCountAllProductionMonitor(recepFromDate, recepToDate, receipesSearchModel.getMachineId(), pmSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), pmSearchModel.getMachJobStatus());
-
-        PageImpl<PMReportResponse> reportResponses = new PageImpl<>(pmReportResponses, receipesSearchModel.getPageable(), totalRecords);
-        */return PMResponse.builder()
+        return PMResponse.builder()
                 .isSuccess(true)
-                .responseData(null)
+                .responseData(receipeEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
     }
+
+
 
     private ReceipeEntity convertRecipesCreateRequestToEntity(RecipesCreateRequest recipesCreateRequest) {
         return ReceipeEntity.receipeEntityBuilder()

@@ -43,7 +43,7 @@ public class MachineEntity extends AuditEnabledEntity {
 
     @Schema(example = "REMARK")
     private String remark;
-    @Column(name = "status")
+    @Column(name = "status_cd")
     private String statusCd;
 
     @Builder(builderMethodName = "machineEntityBuilder")

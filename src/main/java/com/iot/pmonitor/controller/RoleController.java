@@ -1,14 +1,12 @@
 package com.iot.pmonitor.controller;
 
 import com.iot.pmonitor.enums.PageDirection;
-import com.iot.pmonitor.enums.PartSearchEnum;
+import com.iot.pmonitor.enums.RoleSearchEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
-import com.iot.pmonitor.model.ReceipesSearchModel;
-import com.iot.pmonitor.request.ReceipesSearchRequest;
-import com.iot.pmonitor.request.RecipesCreateRequest;
-import com.iot.pmonitor.request.RecipesUpdateRequest;
+import com.iot.pmonitor.request.RoleCreateRequest;
+import com.iot.pmonitor.request.RoleUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
-import com.iot.pmonitor.service.RecipesService;
+import com.iot.pmonitor.service.RoleService;
 import com.iot.pmonitor.utils.PMUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -25,39 +23,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/receipes")
-public class ReceipesController {
+@RequestMapping(value = "/roles")
+public class RoleController {
 
     @Autowired
-    private RecipesService recipesService;
+    private RoleService roleService;
 
     @PostMapping
-    public ResponseEntity<PMResponse> saveRecipes(@RequestBody RecipesCreateRequest recipesCreateRequest) {
-        PMResponse response = recipesService.saveRecipes(recipesCreateRequest);
+    public ResponseEntity<PMResponse> saveRoleDetails(@RequestBody RoleCreateRequest roleCreateRequest) {
+        PMResponse response = roleService.saveRole(roleCreateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<PMResponse> updateRecipes(@RequestBody RecipesUpdateRequest recipesUpdateRequest) {
-        PMResponse response = recipesService.updateRecipes(recipesUpdateRequest);
+    public ResponseEntity<PMResponse> updateRoleDetails(@RequestBody RoleUpdateRequest roleUpdateRequest) {
+        PMResponse response = roleService.updateRole(roleUpdateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
     @PageableAsQueryParam
-    public ResponseEntity<PMResponse> findPartDetails(@RequestParam(required = false) PartSearchEnum searchEnum,
+    public ResponseEntity<PMResponse> findRoleDetails(@RequestParam(required = false) RoleSearchEnum searchEnum,
                                                       @RequestParam(required = false) String searchString,
                                                       @RequestParam(required = false) StatusCdEnum statusCdEnum,
                                                       @Parameter(hidden = true) Pageable pageable,
                                                       @Parameter(hidden = true) PageDirection pageDirection,
                                                       @Parameter(hidden = true) String sortParam) {
-        PMResponse response = recipesService.findRecipesDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
+        PMResponse response = roleService.findRoleDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
-
 }

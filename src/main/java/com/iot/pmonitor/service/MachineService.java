@@ -1,6 +1,7 @@
 package com.iot.pmonitor.service;
 
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.MachineSearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.request.MachineCreateRequest;
 import com.iot.pmonitor.request.MachineUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
@@ -11,5 +12,5 @@ public interface MachineService {
     public PMResponse saveMachine(MachineCreateRequest machineRequest);
     public PMResponse updateMachine(MachineUpdateRequest machineUpdateRequest);
 
-    public PMResponse findMachineDetails(SearchEnum searchEnum, String searchString, Pageable pageable, String sortParam, String pageDirection );
+    public PMResponse findMachineDetails(MachineSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection );
 }

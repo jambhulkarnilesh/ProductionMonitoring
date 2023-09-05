@@ -1,7 +1,8 @@
 package com.iot.pmonitor.controller;
 
+import com.iot.pmonitor.enums.EmployeeSearchEnum;
 import com.iot.pmonitor.enums.PageDirection;
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.request.EmployeeCreateRequest;
 import com.iot.pmonitor.request.EmployeeUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
@@ -39,12 +40,13 @@ public class EmployeeController {
 
     @GetMapping
     @PageableAsQueryParam
-    public ResponseEntity<PMResponse> getAllEmployee(@RequestParam(required = false) SearchEnum searchEnum,
+    public ResponseEntity<PMResponse> getAllEmployee(@RequestParam(required = false) EmployeeSearchEnum searchEnum,
                                                      @RequestParam(required = false) String searchString,
+                                                     @RequestParam(required = false) StatusCdEnum statusCdEnum,
                                                      @Parameter(hidden = true) Pageable pageable,
                                                      @Parameter(hidden = true) PageDirection pageDirection,
                                                      @Parameter(hidden = true) String sortParam) {
-        PMResponse response = employeeService.findEmployee(searchEnum, searchString, pageable, sortParam, PMUtils.getDirection(pageDirection));
+        PMResponse response = employeeService.findEmployee(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

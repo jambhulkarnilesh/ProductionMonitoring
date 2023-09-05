@@ -3,7 +3,8 @@ package com.iot.pmonitor.service.serviceImpl;
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.MachineAudit;
 import com.iot.pmonitor.entity.MachineEntity;
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.MachineSearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.MachineAuditRepo;
 import com.iot.pmonitor.repository.MachineRepo;
@@ -63,18 +64,21 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public PMResponse findMachineDetails(SearchEnum searchEnum, String searchString, Pageable requestPageable, String sortParam, String pageDirection) {
+    public PMResponse findMachineDetails(MachineSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
         Page<MachineEntity> machineEntities = null;
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                machineEntities = machineRepo.findByMachineId(Integer.parseInt(searchString), pageable);
+                machineEntities = machineRepo.findByMachineIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                machineEntities = machineRepo.findByMachineName(searchString, pageable);
+                machineEntities = machineRepo.findByMachineNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_MACHINE_CAPACITY":
+                machineEntities = machineRepo.findByMachineMaxCapacityAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
-                machineEntities = machineRepo.findByStatusCd(searchString, pageable);
+                machineEntities = machineRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
                 break;
             default:
                 machineEntities = machineRepo.findAll(pageable);

@@ -3,7 +3,8 @@ package com.iot.pmonitor.service.serviceImpl;
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.PartAudit;
 import com.iot.pmonitor.entity.PartEntity;
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.PartSearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.repository.PartAuditRepo;
 import com.iot.pmonitor.repository.PartRepo;
@@ -64,18 +65,21 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public PMResponse findPartDetails(SearchEnum searchEnum, String searchString, Pageable requestPageable, String sortParam, String pageDirection) {
+    public PMResponse findPartDetails(PartSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
         Page<PartEntity> partEntities = null;
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                partEntities = partRepo.findByPartId(Integer.parseInt(searchString), pageable);
+                partEntities = partRepo.findByPartIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                partEntities = partRepo.findByPartName(searchString, pageable);
+                partEntities = partRepo.findByPartNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                break;
+            case "BY_JOB_TARGET":
+                partEntities = partRepo.findByPartJobTargetAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_STATUS":
-                partEntities = partRepo.findByStatusCd(searchString, pageable);
+                partEntities = partRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
                 break;
             case "ALL":
             default:

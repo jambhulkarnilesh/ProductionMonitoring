@@ -50,7 +50,7 @@ public class ReceipeAudit extends  AuditEnabledEntity{
     @Schema(example = "recep_status")
     private String recepStatus;
 
-    @Column(name = "status")
+    @Column(name = "status_cd")
     private String statusCd;
 
     public ReceipeAudit(ReceipeEntity receipeEntity){

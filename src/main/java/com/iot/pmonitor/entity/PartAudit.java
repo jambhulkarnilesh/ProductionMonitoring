@@ -38,7 +38,7 @@ public class PartAudit extends AuditEnabledEntity {
 
     @Schema(example = "REMARK")
     private String remark;
-    @Column(name = "status")
+    @Column(name = "status_cd")
     private String statusCd;
 
     public PartAudit(PartEntity partEntity) {

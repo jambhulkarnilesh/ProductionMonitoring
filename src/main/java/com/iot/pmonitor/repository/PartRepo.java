@@ -12,9 +12,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PartRepo extends JpaRepository<PartEntity, Integer> {
 
-    public Page<PartEntity> findByPartId(Integer partId, Pageable pageable);
+    public Page<PartEntity> findByPartIdAndStatusCd(Integer partId, String statusCd, Pageable pageable);
 
-    public Page<PartEntity> findByPartName(String partName, Pageable pageable);
+    public Page<PartEntity> findByPartNameAndStatusCd(String partName, String statusCd, Pageable pageable);
+
+    public Page<PartEntity> findByPartJobTargetAndStatusCd(String partJobTarget, String statusCd, Pageable pageable);
 
     public Page<PartEntity> findByStatusCd(String status, Pageable pageable);
 

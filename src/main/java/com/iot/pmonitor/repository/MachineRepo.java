@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MachineRepo extends JpaRepository<MachineEntity, Integer> {
 
-    public Page<MachineEntity> findByMachineId(Integer machineId, Pageable pageable);
+    public Page<MachineEntity> findByMachineIdAndStatusCd(Integer machineId, String statusCd, Pageable pageable);
 
-    public Page<MachineEntity> findByMachineName(String machineName, Pageable pageable);
+    public Page<MachineEntity> findByMachineNameAndStatusCd(String machineName, String statusCd, Pageable pageable);
 
-    public Page<MachineEntity> findByStatusCd(String status, Pageable pageable);
+    public Page<MachineEntity> findByMachineMaxCapacityAndStatusCd(String machineMaxCapacity, String status,  Pageable pageable);
+
+    public Page<MachineEntity> findByStatusCd(String status,Pageable pageable);
 }

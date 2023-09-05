@@ -1,13 +1,16 @@
 package com.iot.pmonitor.enums;
 
-public enum SearchEnum {
+public enum ReceipesSearchEnum {
+
     ALL("ALL"),
     BY_ID("BY_ID"),
-    BY_NAME("BY_NAME"),
+    BY_EMP_ID("BY_EMP_ID"),
+    BY_MACHINE_ID("BY_MACHINE_ID"),
+    BY_PART_ID("BY_PART_ID"),
     BY_STATUS("BY_STATUS");
 
     private String searchBy;
-    SearchEnum(String searchBy) {
+    ReceipesSearchEnum(String searchBy) {
         this.searchBy = searchBy;
     }
 

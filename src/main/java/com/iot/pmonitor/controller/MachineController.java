@@ -1,7 +1,8 @@
 package com.iot.pmonitor.controller;
 
+import com.iot.pmonitor.enums.MachineSearchEnum;
 import com.iot.pmonitor.enums.PageDirection;
-import com.iot.pmonitor.enums.SearchEnum;
+import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.request.MachineCreateRequest;
 import com.iot.pmonitor.request.MachineUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
@@ -44,12 +45,13 @@ public class MachineController {
 
     @GetMapping
     @PageableAsQueryParam
-    public ResponseEntity<PMResponse> getMachineDetails(@RequestParam(required = false) SearchEnum searchEnum,
-                                            @RequestParam(required = false) String searchString,
-                                            @Parameter(hidden = true) Pageable pageable,
-                                            @Parameter(hidden = true) PageDirection pageDirection,
-                                            @Parameter(hidden = true) String sortParam) {
-        PMResponse response = machineService.findMachineDetails(searchEnum, searchString, pageable, sortParam, PMUtils.getDirection(pageDirection));
+    public ResponseEntity<PMResponse> getMachineDetails(@RequestParam(required = false) MachineSearchEnum searchEnum,
+                                                        @RequestParam(required = false) String searchString,
+                                                        @RequestParam(required = false) StatusCdEnum statusCdEnum,
+                                                        @Parameter(hidden = true) Pageable pageable,
+                                                        @Parameter(hidden = true) PageDirection pageDirection,
+                                                        @Parameter(hidden = true) String sortParam) {
+        PMResponse response = machineService.findMachineDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
