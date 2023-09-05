@@ -24,4 +24,7 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Integer> {
 
     public Page<EmployeeEntity> findByStatusCd(String statusCd, Pageable pageable);
 
+
+    public EmployeeEntity findByEmpMobileNoAndStatusCd(String empMobileNo, String statusCd);
+
 }

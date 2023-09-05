@@ -8,5 +8,5 @@ public interface EmployeeLoginService {
 
     public PMResponse updateEmployeeLogin(PartUpdateRequest partUpdateRequest);
 
-    public PMResponse employeeLogin(String userName, String userPassword, Integer roleId);
+    public PMResponse employeeLogin(String userName, String userPassword);
 }

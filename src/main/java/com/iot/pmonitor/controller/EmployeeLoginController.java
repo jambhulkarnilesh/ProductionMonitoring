@@ -22,10 +22,9 @@ public class EmployeeLoginController {
     @GetMapping
     public ResponseEntity<PMResponse> findPartDetails(@RequestParam(required = false) String userName,
 
-                                                      @RequestParam(required = false) String userPassword,
-                                                      @RequestParam(required = false) Integer roleId
+                                                      @RequestParam(required = false) String userPassword
     ) {
-        PMResponse response = employeeLoginService.employeeLogin(userName, userPassword, roleId);
+        PMResponse response = employeeLoginService.employeeLogin(userName, userPassword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
