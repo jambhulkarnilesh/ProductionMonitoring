@@ -35,7 +35,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
                     .build();
         }
         return PMResponse.builder()
-                .isSuccess(true)
+                .isSuccess(false)
                 .responseMessage("User name or password is wrong")
                 .build();
     }
