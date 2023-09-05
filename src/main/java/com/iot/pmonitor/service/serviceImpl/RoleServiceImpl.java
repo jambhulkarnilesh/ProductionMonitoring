@@ -21,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class RoleServiceImpl implements RoleService {
@@ -88,6 +90,11 @@ public class RoleServiceImpl implements RoleService {
                 .responseData(roleEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public List<RoleEntity> findAllRolesDetails() {
+        return roleRepo.findAll();
     }
 
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {

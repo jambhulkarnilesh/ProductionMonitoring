@@ -55,4 +55,10 @@ public class DepartmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
+    @GetMapping
+    public ResponseEntity<Object> findAllDepartmentDetails() {
+        return new ResponseEntity<>(departmentService.findAllDepartmentDetails(), HttpStatus.OK);
+
+    }
 }

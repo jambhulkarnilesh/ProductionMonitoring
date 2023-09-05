@@ -54,8 +54,10 @@ public class PartController {
                                          @Parameter(hidden = true) String sortParam) {
         PMResponse response = partService.findPartDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
-
+    @GetMapping
+    public ResponseEntity<Object> findAllPartDetails() {
+        return new ResponseEntity<>(partService.findAllPartDetails(), HttpStatus.OK);
+    }
 }

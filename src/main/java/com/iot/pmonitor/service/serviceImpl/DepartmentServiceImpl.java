@@ -20,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class DepartmentServiceImpl implements DepartmentService {
@@ -87,6 +89,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .responseData(departmentEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public List<DepartmentEntity> findAllDepartmentDetails() {
+        return departmentRepo.findAll();
     }
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest roleCreateRequest) {

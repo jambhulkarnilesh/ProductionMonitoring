@@ -46,13 +46,18 @@ public class DesignationController {
     @GetMapping(value = "/search")
     @PageableAsQueryParam
     public ResponseEntity<PMResponse> findDesignationDetails(@RequestParam(required = false) DesignationSearchEnum searchEnum,
-                                                            @RequestParam(required = false) String searchString,
-                                                            @RequestParam(required = false) StatusCdEnum statusCdEnum,
-                                                            @Parameter(hidden = true) Pageable pageable,
-                                                            @Parameter(hidden = true) PageDirection pageDirection,
-                                                            @Parameter(hidden = true) String sortParam) {
+                                                             @RequestParam(required = false) String searchString,
+                                                             @RequestParam(required = false) StatusCdEnum statusCdEnum,
+                                                             @Parameter(hidden = true) Pageable pageable,
+                                                             @Parameter(hidden = true) PageDirection pageDirection,
+                                                             @Parameter(hidden = true) String sortParam) {
         PMResponse response = designationService.findDesignationDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> findAllDesignationDetails() {
+        return new ResponseEntity<>(designationService.findAllDesignationDetails(), HttpStatus.OK);
     }
 }

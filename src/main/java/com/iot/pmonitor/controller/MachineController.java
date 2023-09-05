@@ -53,7 +53,10 @@ public class MachineController {
                                                         @Parameter(hidden = true) String sortParam) {
         PMResponse response = machineService.findMachineDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
+    @GetMapping
+    public ResponseEntity<Object> findAllMachineDetails() {
+        return new ResponseEntity<>(machineService.findAllMachineDetails(), HttpStatus.OK);
+    }
 }

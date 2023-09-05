@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class DesignationServiceImp implements DesignationService {
@@ -89,6 +91,11 @@ public class DesignationServiceImp implements DesignationService {
                 .responseData(departmentEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public List<DesignationEntity> findAllDesignationDetails() {
+        return designationRepo.findAll();
     }
 
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {

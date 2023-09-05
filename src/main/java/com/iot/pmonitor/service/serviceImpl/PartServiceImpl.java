@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @Slf4j
@@ -90,6 +92,11 @@ public class PartServiceImpl implements PartService {
                 .responseData(partEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public List<PartEntity> findAllPartDetails() {
+        return partRepo.findAll();
     }
 
     private PartEntity convertPartCreateRequestToEntity(PartCreateRequest partCreateRequest) {

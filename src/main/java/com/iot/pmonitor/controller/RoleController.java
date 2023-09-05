@@ -53,6 +53,10 @@ public class RoleController {
                                                       @Parameter(hidden = true) String sortParam) {
         PMResponse response = roleService.findRoleDetails(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
+    @GetMapping
+    public ResponseEntity<Object> findAllRoleDetails() {
+        return new ResponseEntity<>(roleService.findAllRolesDetails(), HttpStatus.OK);
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class MachineServiceImpl implements MachineService {
@@ -88,6 +90,11 @@ public class MachineServiceImpl implements MachineService {
                 .responseData(machineEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public List<MachineEntity> findAllMachineDetails() {
+        return machineRepo.findAll();
     }
 
     private MachineEntity convertMachineCreateRequestToEntity(MachineCreateRequest machineCreateRequest) {
