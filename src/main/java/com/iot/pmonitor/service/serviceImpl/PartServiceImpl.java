@@ -1,6 +1,7 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.PartAudit;
 import com.iot.pmonitor.entity.PartEntity;
 import com.iot.pmonitor.enums.PartSearchEnum;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -34,6 +36,13 @@ public class PartServiceImpl implements PartService {
 
     @Override
     public PMResponse savePart(PartCreateRequest partCreateRequest) {
+
+        Optional<PartEntity> optionalPartEntity = partRepo.findByPartNameEqualsIgnoreCase(partCreateRequest.getPartName());
+        if(optionalPartEntity.isPresent()){
+            log.error("Inside PartServiceImpl >> savePart()");
+            throw new PMException("PartServiceImpl", false, "Part name already exist");
+        }
+
         PartEntity partEntity = convertPartCreateRequestToEntity(partCreateRequest);
         try {
             partRepo.save(partEntity);

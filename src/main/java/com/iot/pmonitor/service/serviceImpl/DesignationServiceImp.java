@@ -1,6 +1,7 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.DesignationAudit;
 import com.iot.pmonitor.entity.DesignationEntity;
 import com.iot.pmonitor.enums.DesignationSearchEnum;
@@ -10,6 +11,7 @@ import com.iot.pmonitor.repository.DesignationAuditRepo;
 import com.iot.pmonitor.repository.DesignationRepo;
 import com.iot.pmonitor.request.DesignationCreateRequest;
 import com.iot.pmonitor.request.DesignationUpdateRequest;
+import com.iot.pmonitor.response.DesignationReponse;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.DesignationService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -19,7 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -32,8 +36,14 @@ public class DesignationServiceImp implements DesignationService {
     private DesignationAuditRepo designationAuditRepo;
 
     @Override
-    public PMResponse saveDesignation(DesignationCreateRequest departmentCreateRequest) {
-        DesignationEntity designationEntity = convertDesignationCreateRequestToEntity(departmentCreateRequest);
+    public PMResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
+        Optional<DesignationEntity> designationEntities = designationRepo.findByDeptIdAndDesigNameEqualsIgnoreCase(designationCreateRequest.getDepatId(), designationCreateRequest.getDesigName());
+        if(designationEntities.isPresent()){
+            log.error("Inside DesignationServiceImp >> saveDesignation()");
+            throw new PMException("DesignationServiceImp", false, "With Department name Designation name already exist");
+        }
+
+        DesignationEntity designationEntity = convertDesignationCreateRequestToEntity(designationCreateRequest);
         try {
             designationRepo.save(designationEntity);
             DesignationAudit designationAudit = new DesignationAudit(designationEntity);
@@ -94,8 +104,20 @@ public class DesignationServiceImp implements DesignationService {
     }
 
     @Override
-    public List<DesignationEntity> findAllDesignationDetails() {
-        return designationRepo.findAll();
+    public List<DesignationReponse> findAllDesignationDetails(Integer deptId) {
+
+        List<DesignationEntity> designationEntities =  designationRepo.findAllDesignation(deptId);
+        List<DesignationReponse> designationReponses = new ArrayList<>();
+        DesignationReponse designationReponse = null;
+        for(DesignationEntity designationEntity : designationEntities){
+            designationReponse = new DesignationReponse();
+            designationReponse.setDesigId(designationEntity.getDesigId());
+            designationReponse.setDeptId(designationEntity.getDeptId());
+            designationReponse.setDesigName(designationEntity.getDesigName());
+            designationReponse.setStatusCd(designationEntity.getStatusCd());
+            designationReponses.add(designationReponse);
+        }
+        return designationReponses;
     }
 
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {

@@ -1,6 +1,7 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.MachineAudit;
 import com.iot.pmonitor.entity.MachineEntity;
 import com.iot.pmonitor.enums.MachineSearchEnum;
@@ -10,6 +11,7 @@ import com.iot.pmonitor.repository.MachineAuditRepo;
 import com.iot.pmonitor.repository.MachineRepo;
 import com.iot.pmonitor.request.MachineCreateRequest;
 import com.iot.pmonitor.request.MachineUpdateRequest;
+import com.iot.pmonitor.response.MachineResponse;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.MachineService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -19,7 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,6 +37,12 @@ public class MachineServiceImpl implements MachineService {
 
     @Override
     public PMResponse saveMachine(MachineCreateRequest machineCreateRequest) {
+
+        Optional<MachineEntity> machineEntities = machineRepo.findByMachineNameEqualsIgnoreCase(machineCreateRequest.getMachineName());
+        if(machineEntities.isPresent()){
+            log.error("Inside MachineServiceImpl >> saveMachine()");
+            throw new PMException("MachineServiceImpl", false, "Machine name already exist");
+        }
         MachineEntity machineEntity = convertMachineCreateRequestToEntity(machineCreateRequest);
         try {
             machineRepo.save(machineEntity);
@@ -93,8 +103,19 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public List<MachineEntity> findAllMachineDetails() {
-        return machineRepo.findAll();
+    public List<MachineResponse> findAllMachineDetails() {
+        List<MachineEntity> machineEntities =  machineRepo.findAllMachines();
+        List<MachineResponse> machineResponses = new ArrayList<>();
+        MachineResponse machineResponse = null;
+        for(MachineEntity departmentEntity : machineEntities){
+            machineResponse = new MachineResponse();
+
+            machineResponse.setMachineId(departmentEntity.getMachineId());
+            machineResponse.setMachineName(departmentEntity.getMachineName());
+            machineResponse.setStatusCd(departmentEntity.getStatusCd());
+            machineResponses.add(machineResponse);
+        }
+        return machineResponses;
     }
 
     private MachineEntity convertMachineCreateRequestToEntity(MachineCreateRequest machineCreateRequest) {

@@ -57,7 +57,7 @@ public class DesignationController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAllDesignationDetails() {
-        return new ResponseEntity<>(designationService.findAllDesignationDetails(), HttpStatus.OK);
+    public ResponseEntity<Object> findAllDesignationDetails(Integer deptId) {
+        return new ResponseEntity<>(designationService.findAllDesignationDetails(deptId), HttpStatus.OK);
     }
 }

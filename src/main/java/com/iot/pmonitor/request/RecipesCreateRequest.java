@@ -4,13 +4,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.persistence.Column;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class RecipesCreateRequest {
 
-    @Schema(example = "2023-09-01", description = "This field is used for recipes date")
-    private LocalDate recepDate;
+    //@Schema(example = "2023-09-01", description = "This field is used for recipes date")
+    private Timestamp recepDate;
 
     @Schema(example = "1", description = "This field is used for employee id")
     private int empId;

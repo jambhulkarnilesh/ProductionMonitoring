@@ -1,6 +1,7 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.PartEntity;
 import com.iot.pmonitor.entity.RoleAudit;
 import com.iot.pmonitor.entity.RoleEntity;
@@ -12,7 +13,9 @@ import com.iot.pmonitor.repository.RoleAuditRepo;
 import com.iot.pmonitor.repository.RoleRepo;
 import com.iot.pmonitor.request.RoleCreateRequest;
 import com.iot.pmonitor.request.RoleUpdateRequest;
+import com.iot.pmonitor.response.DepartmentReponse;
 import com.iot.pmonitor.response.PMResponse;
+import com.iot.pmonitor.response.RoleResponse;
 import com.iot.pmonitor.service.RoleService;
 import com.iot.pmonitor.utils.PMUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +24,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -35,11 +40,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public PMResponse saveRole(RoleCreateRequest roleCreateRequest) {
-        RoleEntity partEntity = convertRoleCreateRequestToEntity(roleCreateRequest);
+        Optional<RoleEntity> optionalRoleEntity = roleRepo.findByRoleNameEqualsIgnoreCase(roleCreateRequest.getRoleName());
+        if(optionalRoleEntity.isPresent()){
+            log.error("Inside RoleServiceImpl >> saveRole()");
+            throw new PMException("RoleServiceImpl", false, "Role name already exist");
+        }
+
+        RoleEntity roleEntity = convertRoleCreateRequestToEntity(roleCreateRequest);
         try {
-            roleRepo.save(partEntity);
-            RoleAudit partAudit = new RoleAudit(partEntity);
-            roleAuditRepo.save(partAudit);
+            roleRepo.save(roleEntity);
+            RoleAudit roleAudit = new RoleAudit(roleEntity);
+            roleAuditRepo.save(roleAudit);
             return PMResponse.builder()
                     .isSuccess(true)
                     .responseMessage(PMConstants.RECORD_SUCCESS)
@@ -93,8 +104,19 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleEntity> findAllRolesDetails() {
-        return roleRepo.findAll();
+    public List<RoleResponse> findAllRolesDetails() {
+        List<RoleEntity> roleEntities =  roleRepo.findAllRolesDetails();
+        List<RoleResponse> roleResponses = new ArrayList<>();
+        RoleResponse roleResponse = null;
+        for(RoleEntity departmentEntity : roleEntities){
+            roleResponse = new RoleResponse();
+
+            roleResponse.setRoleId(departmentEntity.getRoleId());
+            roleResponse.setRoleName(departmentEntity.getRoleName());
+            roleResponse.setStatusCd(departmentEntity.getStatusCd());
+            roleResponses.add(roleResponse);
+        }
+        return roleResponses;
     }
 
     private RoleEntity convertRoleCreateRequestToEntity(RoleCreateRequest roleCreateRequest) {

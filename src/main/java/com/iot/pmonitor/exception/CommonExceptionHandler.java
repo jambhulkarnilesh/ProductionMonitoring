@@ -1,5 +1,6 @@
 package com.iot.pmonitor.exception;
 
+import com.iot.pmonitor.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 @Slf4j
 public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
-
     @ExceptionHandler(PMException.class)
-    public final ResponseEntity handlePMException(PMException exception, WebRequest request) {
-        PMException pmException = new PMException(exception.getSourceClass(), exception.isSuccess(), exception.getMessage());
-        return new ResponseEntity(pmException, HttpStatus.BAD_REQUEST);
+    public final ResponseEntity<Object> handlePMException(PMException exception, WebRequest request) {
+        ErrorResponse response = ErrorResponse.builder().sourceClass(exception.getSourceClass()).isSuccess(exception.isSuccess()).details(exception.getMessage()).build();
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
 }

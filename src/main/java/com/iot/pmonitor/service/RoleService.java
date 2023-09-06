@@ -10,6 +10,7 @@ import com.iot.pmonitor.request.PartUpdateRequest;
 import com.iot.pmonitor.request.RoleCreateRequest;
 import com.iot.pmonitor.request.RoleUpdateRequest;
 import com.iot.pmonitor.response.PMResponse;
+import com.iot.pmonitor.response.RoleResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -22,5 +23,5 @@ public interface RoleService {
 
     public PMResponse findRoleDetails(RoleSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection );
 
-    public List<RoleEntity> findAllRolesDetails();
+    public List<RoleResponse> findAllRolesDetails();
 }

@@ -114,7 +114,7 @@ public class ReceipesServiceImpl implements RecipesService {
 
     private ReceipeEntity convertRecipesCreateRequestToEntity(RecipesCreateRequest recipesCreateRequest) {
         return ReceipeEntity.receipeEntityBuilder()
-               // .recepDate(recipesCreateRequest.getRecepDate())
+                .recepDate(recipesCreateRequest.getRecepDate())
                 .empId(recipesCreateRequest.getEmpId())
                 .machineId(recipesCreateRequest.getMachineId())
                 .partId(recipesCreateRequest.getPartId())
@@ -129,7 +129,7 @@ public class ReceipesServiceImpl implements RecipesService {
     private ReceipeEntity convertRecipesUpdateRequestToEntity(RecipesUpdateRequest recipesUpdateRequest) {
         return ReceipeEntity.receipeEntityBuilder()
                 .recepId(recipesUpdateRequest.getRecepId())
-               // .recepDate(recipesUpdateRequest.getRecepDate())
+                .recepDate(recipesUpdateRequest.getRecepDate())
                 .empId(recipesUpdateRequest.getEmpId())
                 .machineId(recipesUpdateRequest.getMachineId())
                 .partId(recipesUpdateRequest.getPartId())

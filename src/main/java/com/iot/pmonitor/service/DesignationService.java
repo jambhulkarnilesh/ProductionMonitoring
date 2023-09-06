@@ -7,6 +7,7 @@ import com.iot.pmonitor.enums.DesignationSearchEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.request.DesignationCreateRequest;
 import com.iot.pmonitor.request.DesignationUpdateRequest;
+import com.iot.pmonitor.response.DesignationReponse;
 import com.iot.pmonitor.response.PMResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -21,5 +22,5 @@ public interface DesignationService {
 
     public PMResponse findDesignationDetails(DesignationSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable pageable, String sortParam, String pageDirection );
 
-    public List<DesignationEntity> findAllDesignationDetails();
+    public List<DesignationReponse> findAllDesignationDetails(Integer deptId);
 }

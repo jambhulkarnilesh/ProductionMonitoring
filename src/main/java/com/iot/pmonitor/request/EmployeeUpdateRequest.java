@@ -7,16 +7,16 @@ import lombok.Data;
 public class EmployeeUpdateRequest {
 
     @Schema(example = "1", description = "This field is used for employee id")
-    private int empId;
+    private Integer empId;
 
     @Schema(example = "1", description = "This field is used for department id")
-    private int depId;
+    private Integer depId;
 
     @Schema(example = "1", description = "This field is used for designation id")
-    private int desigId;
+    private Integer desigId;
 
     @Schema(example = "1", description = "This field is used for employee role id")
-    private int roleId;
+    private Integer roleId;
 
     @Schema(example = "Nilesh", description = "This field is used for employee first name")
     private String empFirstName;

@@ -3,6 +3,7 @@ package com.iot.pmonitor.service.serviceImpl;
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.DepartmentAudit;
 import com.iot.pmonitor.entity.DepartmentEntity;
+import com.iot.pmonitor.entity.DesignationEntity;
 import com.iot.pmonitor.entity.RoleEntity;
 import com.iot.pmonitor.enums.DepartmentSearchEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
@@ -11,6 +12,8 @@ import com.iot.pmonitor.repository.DepartmentAuditRepo;
 import com.iot.pmonitor.repository.DepartmentRepo;
 import com.iot.pmonitor.request.DepartmentCreateRequest;
 import com.iot.pmonitor.request.DepartmentUpdateRequest;
+import com.iot.pmonitor.response.DepartmentReponse;
+import com.iot.pmonitor.response.DesignationReponse;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.DepartmentService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -20,7 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,6 +39,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public PMResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
+
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDepatName());
+        if(optionalDepartmentEntity.isPresent()){
+            log.error("Inside DepartmentServiceImpl >> saveDepartment()");
+            throw new PMException("DepartmentServiceImpl", false, "Department name already exist");
+        }
+
         DepartmentEntity departmentEntity = convertDepartmentCreateRequestToEntity(departmentCreateRequest);
         try {
             departmentRepo.save(departmentEntity);
@@ -92,8 +104,35 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<DepartmentEntity> findAllDepartmentDetails() {
-        return departmentRepo.findAll();
+    public List<DepartmentReponse> findAllDepartmentDetails() {
+
+        List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartments();
+        List<DepartmentReponse> departmentReponses = new ArrayList<>();
+        DepartmentReponse departmentReponse = null;
+        for(DepartmentEntity departmentEntity : departmentEntities){
+            departmentReponse = new DepartmentReponse();
+
+            departmentReponse.setDeptId(departmentEntity.getDeptId());
+            departmentReponse.setDeptName(departmentEntity.getDeptName());
+            departmentReponse.setStatusCd(departmentEntity.getStatusCd());
+            departmentReponses.add(departmentReponse);
+        }
+        return departmentReponses;
+    }
+
+    @Override
+    public List<DepartmentReponse> findAllDepartmentDetailsForEmployee() {
+        List<DepartmentEntity> departmentEntities =  departmentRepo.findAllDepartmentDetailsForEmployee();
+        List<DepartmentReponse> departmentReponses = new ArrayList<>();
+        DepartmentReponse departmentReponse = null;
+        for(DepartmentEntity departmentEntity : departmentEntities){
+            departmentReponse = new DepartmentReponse();
+            departmentReponse.setDeptId(departmentEntity.getDeptId());
+            departmentReponse.setDeptName(departmentEntity.getDeptName());
+            departmentReponse.setStatusCd(departmentEntity.getStatusCd());
+            departmentReponses.add(departmentReponse);
+        }
+        return departmentReponses;
     }
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest roleCreateRequest) {

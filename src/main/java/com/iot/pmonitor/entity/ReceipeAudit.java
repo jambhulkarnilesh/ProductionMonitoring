@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -30,7 +31,7 @@ public class ReceipeAudit extends  AuditEnabledEntity{
     private Integer recepId;
 
     @Column(name = "recep_date")
-    private LocalDateTime recepDate;
+    private Timestamp recepDate;
 
     @Column(name = "emp_id")
     private int empId;

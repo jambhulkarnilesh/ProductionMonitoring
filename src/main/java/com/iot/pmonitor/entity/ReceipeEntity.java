@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class ReceipeEntity extends AuditEnabledEntity {
     private Integer recepId;
 
     @Column(name = "recep_date")
-    private LocalDateTime recepDate;
+    private Timestamp recepDate;
 
     @Column(name = "emp_id")
     private int empId;
@@ -53,7 +54,7 @@ public class ReceipeEntity extends AuditEnabledEntity {
     private String statusCd;
 
     @Builder(builderMethodName = "receipeEntityBuilder")
-    public ReceipeEntity(Integer recepId, LocalDateTime recepDate, int empId, Integer machineId, Integer partId, String machTargetJobCount, String remark, String recepStatus, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public ReceipeEntity(Integer recepId, Timestamp recepDate, int empId, Integer machineId, Integer partId, String machTargetJobCount, String remark, String recepStatus, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.recepId = recepId;
         this.recepDate = recepDate;

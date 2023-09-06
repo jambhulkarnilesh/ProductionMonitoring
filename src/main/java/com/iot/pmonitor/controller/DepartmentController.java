@@ -57,8 +57,14 @@ public class DepartmentController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAllDepartmentDetails() {
+    public ResponseEntity<Object> findAllDepartmentDetailsForDesig() {
         return new ResponseEntity<>(departmentService.findAllDepartmentDetails(), HttpStatus.OK);
+
+    }
+
+    @GetMapping(value = "/employee")
+    public ResponseEntity<Object> findAllDepartmentDetailsForEmployee() {
+        return new ResponseEntity<>(departmentService.findAllDepartmentDetailsForEmployee(), HttpStatus.OK);
 
     }
 }

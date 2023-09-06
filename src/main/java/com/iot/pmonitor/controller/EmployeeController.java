@@ -49,4 +49,10 @@ public class EmployeeController {
         PMResponse response = employeeService.findEmployee(searchEnum, searchString, statusCdEnum, pageable, sortParam, PMUtils.getDirection(pageDirection));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<Object> findAllDepartmentDetailsForEmployee() {
+        return new ResponseEntity<>(employeeService.findAllEmployeeDetails(), HttpStatus.OK);
+
+    }
 }

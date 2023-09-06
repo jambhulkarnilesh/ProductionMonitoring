@@ -1,6 +1,7 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.EmployeeAudit;
 import com.iot.pmonitor.entity.EmployeeEntity;
 import com.iot.pmonitor.entity.EmployeeLoginAudit;
@@ -14,6 +15,8 @@ import com.iot.pmonitor.repository.EmployeeLoginRepo;
 import com.iot.pmonitor.repository.EmployeeRepo;
 import com.iot.pmonitor.request.EmployeeCreateRequest;
 import com.iot.pmonitor.request.EmployeeUpdateRequest;
+import com.iot.pmonitor.response.DepartmentReponse;
+import com.iot.pmonitor.response.EmployeeResponse;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.EmployeeService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -24,6 +27,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -44,6 +49,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public PMResponse saveEmployee(EmployeeCreateRequest employeeCreateRequest) {
+
+        Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepo.findByEmpMobileNoOrEmailIdEqualsIgnoreCase(employeeCreateRequest.getEmpMobileNo(), employeeCreateRequest.getEmailId());
+        if(optionalEmployeeEntity.isPresent()){
+            log.error("Inside EmployeeServiceImpl >> saveEmployee()");
+            throw new PMException("EmployeeServiceImpl", false, "Employee Mobile number or email id already exist");
+        }
+
 
         EmployeeEntity employeeEntity = convertEmployeeCreateRequestToEntity(employeeCreateRequest);
         try {
@@ -121,6 +133,21 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .responseData(partEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
+    }
+
+    @Override
+    public List<EmployeeResponse> findAllEmployeeDetails() {
+        List<EmployeeEntity> employeeEntities =  employeeRepo.findAllEmployeeDetails();
+        List<EmployeeResponse>  employeeResponses= new ArrayList<>();
+        EmployeeResponse employeeResponse = null;
+        for(EmployeeEntity employeeEntity : employeeEntities){
+            employeeResponse = new EmployeeResponse();
+            employeeResponse.setEmpId(employeeEntity.getEmpId());
+            employeeResponse.setEmpFullName(employeeEntity.getEmpFirstName() +" "+employeeEntity.getEmpMiddleName() +" "+employeeEntity.getEmpLastName());
+            employeeResponse.setStatusCd(employeeEntity.getStatusCd());
+            employeeResponses.add(employeeResponse);
+        }
+        return employeeResponses;
     }
 
     private EmployeeLoginEntity convertRequestToEmployeeLogin(EmployeeCreateRequest employeeCreateRequest) {
