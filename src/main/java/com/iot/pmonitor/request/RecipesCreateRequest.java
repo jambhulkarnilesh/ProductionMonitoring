@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class RecipesCreateRequest {
 
-    //@Schema(example = "2023-09-01", description = "This field is used for recipes date")
+    @Schema(example = "2023-09-01", description = "This field is used for recipes date")
     private Timestamp recepDate;
 
     @Schema(example = "1", description = "This field is used for employee id")
