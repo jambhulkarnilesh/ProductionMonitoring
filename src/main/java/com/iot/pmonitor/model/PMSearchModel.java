@@ -1,5 +1,6 @@
 package com.iot.pmonitor.model;
 
+import com.iot.pmonitor.enums.PMSearchEnum;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.domain.Pageable;
@@ -15,13 +16,9 @@ public class PMSearchModel {
     private String sortDirection;
     private String fromDate;
     private String toDate;
+    private PMSearchEnum searchEnum;
     private Integer machineId;
-    private String machineStatus;
-    private String machineName;
-    private String machinePLCType;
     private Integer partId;
-    private String partName;
     private String machTargetJobCount;
-    private String machCompletedJobCount;
     private String machJobStatus;
 }

@@ -21,6 +21,9 @@ public class ProductionMonitorRequest {
     @Schema(example = "0", description = "This field is used for Machine Remaining Count")
     private String machCompletedJobCount;
 
+    @Schema(example = "Pending", description = "This field is used for Machine job status")
+    private String machJobStatus;
+
     @Schema(example = "This is request remark", description = "This field is used for Machine maximum capacity to produce")
     private String remark;
     

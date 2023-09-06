@@ -1,5 +1,6 @@
 package com.iot.pmonitor.controller;
 
+import com.iot.pmonitor.enums.PMSearchEnum;
 import com.iot.pmonitor.enums.PageDirection;
 import com.iot.pmonitor.model.PMSearchModel;
 import com.iot.pmonitor.request.PMSearchRequest;
@@ -19,9 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin
@@ -44,21 +45,21 @@ public class ProductionMonitorController {
 
     @PostMapping(value = "/search")
     @PageableAsQueryParam
-    public ResponseEntity<Object> getPartDetails(@Valid @RequestBody PMSearchRequest pmSearchRequest,
-                                         @Parameter(hidden = true) Pageable pageable,
-                                         @Parameter(hidden = true) PageDirection pageDirection,
-                                         @Parameter(hidden = true) String sortParam) {
+    public ResponseEntity<Object> getPartDetails(@RequestParam(required = false) PMSearchEnum searchEnum,
+
+                                                 @RequestParam(required = false) String fromDate,
+                                                 @RequestParam(required = false) String toDate,
+                                                 @RequestBody PMSearchRequest pmSearchRequest,
+                                                 @Parameter(hidden = true) Pageable pageable,
+                                                 @Parameter(hidden = true) PageDirection pageDirection,
+                                                 @Parameter(hidden = true) String sortParam) {
         PMSearchModel pmSearchModel = PMSearchModel.builder()
-                .fromDate(pmSearchRequest.getFromDate())
-                .toDate(pmSearchRequest.getToDate())
+                .searchEnum(searchEnum)
+                .fromDate(fromDate)
+                .toDate(toDate)
                 .machineId(pmSearchRequest.getMachineId())
-                .machineStatus(pmSearchRequest.getMachineStatus())
-                .machineName(pmSearchRequest.getMachineName())
-                .machinePLCType(pmSearchRequest.getMachinePLCType())
                 .partId(pmSearchRequest.getPartId())
-                .partName(pmSearchRequest.getPartName())
                 .machTargetJobCount(pmSearchRequest.getMachTargetJobCount())
-                .machCompletedJobCount(pmSearchRequest.getMachCompletedJobCount())
                 .machJobStatus(pmSearchRequest.getMachJobStatus())
                 .pageable(pageable)
                 .sortDirection(PMUtils.getDirection(pageDirection))

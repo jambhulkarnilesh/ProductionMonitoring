@@ -11,10 +11,39 @@ import java.util.List;
 @Repository
 public interface ProductionMonitorAuditRepo extends JpaRepository<ProductionMonitorAudit, Integer> {
 
-    @Query(value = SQLQueryConstants.PRODUCTION_MONITOR, nativeQuery = true)
-    public List<Object[]> getAllProductionMonitor(String fromDate, String toDate, Integer machineId, String machineName, String machinePLCType, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machineStatus, String sortName, Integer pageSize, Integer pageOffset);
+    //for Machine Id
+    @Query(value = SQLQueryConstants.PM_BY_MONITOR_ID, nativeQuery = true)
+    public List<Object[]> getAllPMByMonitorId(String fromDate, String toDate, Integer machineId, String sortName, Integer pageSize, Integer pageOffset);
 
-    @Query(value = SQLQueryConstants.COUNT_PRODUCTION_MONITOR, nativeQuery = true)
-    public long getCountAllProductionMonitor(String fromDate, String toDate, Integer machineId, String machineName, String machinePLCType, Integer partId, String partName, String machTargetJobCount, String machCompletedJobCount, String machineStatus, String machJobStatus);
+    @Query(value = SQLQueryConstants.COUNT_BY_MONITOR_ID, nativeQuery = true)
+    public long getCountPMByMonitorId(String fromDate, String toDate, Integer machineId);
+
+    //for Part Id
+    @Query(value = SQLQueryConstants.PM_BY_PART_ID, nativeQuery = true)
+    public List<Object[]> getAllPMByPartId(String fromDate, String toDate, Integer partId, String sortName, Integer pageSize, Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.COUNT_BY_PART_ID, nativeQuery = true)
+    public long getCountPMByPartId(String fromDate, String toDate, Integer partId);
+
+    // for machine target job count
+    @Query(value = SQLQueryConstants.PM_BY_JOB_TARGET_COUNT, nativeQuery = true)
+    public List<Object[]> getAllPMByJobTargetCount(String fromDate, String toDate, String machTargetJobCount, String sortName, Integer pageSize, Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.COUNT_BY_JOB_TARGET_COUNT, nativeQuery = true)
+    public long getCountByJobTargetCount(String fromDate, String toDate, String machTargetJobCount);
+
+    // for machine job status
+    @Query(value = SQLQueryConstants.PM_BY_MACH_JOB_STATUS, nativeQuery = true)
+    public List<Object[]> getAllPMByMachineJobStatus(String fromDate, String toDate, String machJobStatus, String sortName, Integer pageSize, Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.COUNT_BY_MACH_JOB_STATUS, nativeQuery = true)
+    public long getCountByMachineJobStatus(String fromDate, String toDate, String machJobStatus);
+
+    // for all
+    @Query(value = SQLQueryConstants.PM_BY_ALL, nativeQuery = true)
+    public List<Object[]> getAllPMByAll(String fromDate, String toDate, String sortName, Integer pageSize, Integer pageOffset);
+
+    @Query(value = SQLQueryConstants.COUNT_BY_ALL, nativeQuery = true)
+    public long getCountByAll(String fromDate, String toDate);
 
 }

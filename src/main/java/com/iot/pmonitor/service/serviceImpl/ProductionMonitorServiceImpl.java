@@ -28,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,7 +95,7 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
             }
         }
         return productionMonitorResponses;
-}
+    }
 
     private String getMachineInfo(Integer machineId) {
         Optional<MachineEntity> optionalMachine = machineRepo.findById(machineId);
@@ -106,6 +107,8 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
 
     @Override
     public PMResponse findPMDetails(PMSearchModel pmSearchModel) {
+        List<Object[]> pmData = null;
+        Long totalRecords = 0L;
         List<PMReportResponse> pmReportResponses = null;
         Integer pageSize = pmSearchModel.getPageable().getPageSize();
         Integer pageOffset = (int) pmSearchModel.getPageable().getOffset();
@@ -122,20 +125,50 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
             sortName = order.get().getProperty();  // order by this field
             // sortDirection = order.get().getDirection().toString();  //sort ASC or DESC
         }
-        List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearchModel.getMachineId(), pmSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), sortName, pageSize, pageOffset);
 
-        if (!CollectionUtils.isEmpty(pmData)) {
-            pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
+        //List<Object[]> pmData = monitorAuditRepo.getAllProductionMonitor(pmFromDate, pmToDate, pmSearchModel.getMachineId(), pmSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), sortName, pageSize, pageOffset);
+        try {
+            switch (pmSearchModel.getSearchEnum().getSearchType()) {
+                case "BY_MACH_ID":
+                    pmData = monitorAuditRepo.getAllPMByMonitorId(pmFromDate, pmToDate, pmSearchModel.getMachineId(), sortName, pageSize, pageOffset);
+                    totalRecords = monitorAuditRepo.getCountPMByMonitorId(pmFromDate, pmToDate, pmSearchModel.getMachineId());
+                    break;
+                case "BY_PART_ID":
+                    pmData = monitorAuditRepo.getAllPMByPartId(pmFromDate, pmToDate, pmSearchModel.getPartId(), sortName, pageSize, pageOffset);
+                    totalRecords = monitorAuditRepo.getCountPMByPartId(pmFromDate, pmToDate, pmSearchModel.getPartId());
+                    break;
+                case "BY_JOB_TARGET_COUNT":
+                    pmData = monitorAuditRepo.getAllPMByJobTargetCount(pmFromDate, pmToDate, pmSearchModel.getMachTargetJobCount(), sortName, pageSize, pageOffset);
+                    totalRecords = monitorAuditRepo.getCountByJobTargetCount(pmFromDate, pmToDate, pmSearchModel.getMachTargetJobCount());
+                    break;
+                case "BY_MACH_JOB_STATUS":
+                    pmData = monitorAuditRepo.getAllPMByMachineJobStatus(pmFromDate, pmToDate, pmSearchModel.getMachJobStatus(), sortName, pageSize, pageOffset);
+                    totalRecords = monitorAuditRepo.getCountByMachineJobStatus(pmFromDate, pmToDate, pmSearchModel.getMachJobStatus());
+                    break;
+                case "ALL":
+                default:
+                    pmData = monitorAuditRepo.getAllPMByAll(pmFromDate, pmToDate, sortName, pageSize, pageOffset);
+                    totalRecords = monitorAuditRepo.getCountByAll(pmFromDate, pmToDate);
+            }
+            if (!CollectionUtils.isEmpty(pmData)) {
+                pmReportResponses = pmData.stream().map(PMReportResponse::new).collect(Collectors.toList());
+                return PMResponse.builder()
+                        .isSuccess(true)
+                        .responseData(new PageImpl<>(pmReportResponses, pmSearchModel.getPageable(), totalRecords))
+                        .responseMessage(PMConstants.RECORD_FETCH)
+                        .build();
+            }
+
+            return PMResponse.builder()
+                    .isSuccess(false)
+                    .responseData(new PageImpl<>(new ArrayList<>(), pmSearchModel.getPageable(), totalRecords))
+                    .responseMessage(PMConstants.RECORD_NOT_EXIST)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Inside ProductionHeaderServiceImpl >> findPMDetails()");
+            throw new PMException("ProductionHeaderServiceImpl", false, ex.getMessage());
         }
 
-        long totalRecords = monitorAuditRepo.getCountAllProductionMonitor(pmFromDate, pmToDate, pmSearchModel.getMachineId(), pmSearchModel.getMachineName(), pmSearchModel.getMachinePLCType(), pmSearchModel.getPartId(), pmSearchModel.getPartName(), pmSearchModel.getMachTargetJobCount(), pmSearchModel.getMachCompletedJobCount(), pmSearchModel.getMachineStatus(), pmSearchModel.getMachJobStatus());
-
-        PageImpl<PMReportResponse> reportResponses = new PageImpl<>(pmReportResponses, pmSearchModel.getPageable(), totalRecords);
-        return PMResponse.builder()
-                .isSuccess(true)
-                .responseData(reportResponses)
-                .responseMessage(PMConstants.RECORD_FETCH)
-                .build();
     }
 
 
@@ -149,6 +182,7 @@ public class ProductionMonitorServiceImpl implements ProductionMonitorService {
                 .partName(getPartName(monitorRequest.getPartId()))
                 .machTargetJobCount(monitorRequest.getMachTargetJobCount())
                 .machCompletedJobCount(monitorRequest.getMachCompletedJobCount())
+                .machJobStatus(monitorRequest.getMachJobStatus())
                 .remark(monitorRequest.getRemark())
                 .statusCd(monitorRequest.getStatusCd())
                 .createdUserId(monitorRequest.getEmployeeId())
