@@ -1,0 +1,201 @@
+/*
+DROP TABLE employee;
+DROP TABLE employee_audit;
+drop table production_monitor ;
+drop table production_monitor_audit ;
+drop table machine;
+drop table machine_audit;
+drop table part;
+drop table part_audit ;*/
+
+create table machine(
+    MACH_ID serial  PRIMARY key,
+	MACH_NAME VARCHAR(20),
+	MACH_IP_ADDRESS VARCHAR(20),
+	MACH_PORT_NO VARCHAR(20),
+	MACH_PLC_TYPE VARCHAR(20),
+	MACH_MAX_CAPACITY VARCHAR(20),
+        REMARK VARCHAR(100),
+        STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create table machine_audit(
+	MACH_AUD_ID serial PRIMARY key,
+    MACH_ID int,
+	MACH_NAME VARCHAR(20),
+	MACH_IP_ADDRESS VARCHAR(20),
+	MACH_PORT_NO VARCHAR(20),
+	MACH_PLC_TYPE VARCHAR(20),
+	MACH_MAX_CAPACITY VARCHAR(20),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+
+
+create table part(
+    PART_ID serial PRIMARY key,
+	PART_NAME VARCHAR(20),
+	PART_JOB_TARGET VARCHAR(10),
+	PART_JOB_ASSIGNED VARCHAR(10),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+create table part_audit(
+	PART_AUD_ID serial PRIMARY key,
+    PART_ID int,
+	PART_NAME VARCHAR(20),
+	PART_JOB_TARGET VARCHAR(10),
+	PART_JOB_ASSIGNED VARCHAR(10),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create  table production_monitor(
+    MACH_ID int PRIMARY key,
+	MACH_NAME VARCHAR(20),
+	MACH_STATUS VARCHAR(10),
+	PART_ID int,
+	PART_NAME VARCHAR(20),
+	MACH_TARGET_JOB_COUNT  VARCHAR(20),
+	MACH_COMPLETED_JOB_COUNT  VARCHAR(20),
+	MACH_JOB_STATUS  VARCHAR(20),
+	MACH_JOB_COMPLETED VARCHAR(20),
+  REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null,
+	CONSTRAINT FK_MACH_ID FOREIGN KEY(MACH_ID) REFERENCES MACHINE(MACH_ID),
+	CONSTRAINT FK_PART_ID FOREIGN KEY(PART_ID) REFERENCES PART(PART_ID)
+);
+
+
+create table production_monitor_audit(
+	PHA_ID serial PRIMARY key,
+   MACH_ID int,
+	MACH_NAME VARCHAR(20),	MACH_STATUS VARCHAR(10),
+	PART_ID int,
+	PART_NAME VARCHAR(20),
+	MACH_TARGET_JOB_COUNT  VARCHAR(20),
+	MACH_COMPLETED_JOB_COUNT  VARCHAR(20),
+	MACH_JOB_STATUS  VARCHAR(20),
+	MACH_JOB_COMPLETED VARCHAR(20),
+    REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null,
+	CONSTRAINT FK_MACH_ID FOREIGN KEY(MACH_ID) REFERENCES MACHINE(MACH_ID),
+	CONSTRAINT FK_PART_ID FOREIGN KEY(PART_ID) REFERENCES PART(PART_ID)
+);
+
+
+create table employee(
+    emp_id serial  PRIMARY key,
+	dept_id INTEGER,
+	desig_id INTEGER,
+	role_id INTEGER,
+	emp_fname VARCHAR(20) ,
+	emp_mname VARCHAR(20),
+	emp_lname VARCHAR(20),
+	emp_dob VARCHAR(40),
+	emp_mbno VARCHAR(20),
+	emp_emer_mbno  VARCHAR(20),
+	emp_photo VARCHAR(20),
+	emp_email_id VARCHAR(40),
+	emp_temp_address VARCHAR(100),
+	emp_perm_address VARCHAR(100),
+	emp_gender VARCHAR(10),
+	emp_blood_group VARCHAR(10),
+	emp_password VARCHAR(40),
+    REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+create table employee_audit(
+    emp_aud_id serial  PRIMARY key,
+	emp_id INTEGER,
+	dept_id INTEGER,
+	desig_id INTEGER,
+	role_id INTEGER,
+	emp_fname VARCHAR(20) ,
+	emp_mname VARCHAR(20),
+	emp_lname VARCHAR(20),
+	emp_dob VARCHAR(40),
+	emp_mbno VARCHAR(20),
+	emp_emer_mbno  VARCHAR(20),
+	emp_photo VARCHAR(20),
+	emp_email_id VARCHAR(40),
+	emp_temp_address VARCHAR(100),
+	emp_perm_address VARCHAR(100),
+	emp_gender VARCHAR(10),
+	emp_blood_group VARCHAR(10),
+	emp_password VARCHAR(40),
+    REMARK VARCHAR(100),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+create table recipes(
+    recep_id serial PRIMARY key,
+	recep_date TIMESTAMP,
+	emp_id INTEGER,
+	mach_id INTEGER,
+	part_id INTEGER,
+	mach_target_job_count VARCHAR(10),
+    REMARK VARCHAR(100),
+	recep_status VARCHAR(10),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);
+
+
+create table recipes_audit(
+	recep_aud_id serial PRIMARY key,
+   recep_id INTEGER,
+	recep_date TIMESTAMP,
+	emp_id INTEGER,
+	mach_id INTEGER,
+	part_id INTEGER,
+	mach_target_job_count VARCHAR(10),
+    REMARK VARCHAR(100),
+	recep_status VARCHAR(10),
+    STATUS VARCHAR(10),
+	crte_user_id VARCHAR(20) ,
+	crte_ts TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	lst_updt_ts TIMESTAMP null,
+	lst_updt_user_id VARCHAR(20) null
+);

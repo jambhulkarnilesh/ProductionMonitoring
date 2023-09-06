@@ -1,10 +1,18 @@
 package com.iot.pmonitor.controller;
 
+import com.iot.pmonitor.enums.PMSearchEnum;
+import com.iot.pmonitor.enums.PageDirection;
+import com.iot.pmonitor.model.PMSearchModel;
+import com.iot.pmonitor.request.PMSearchRequest;
 import com.iot.pmonitor.request.ProductionMonitorRequest;
+import com.iot.pmonitor.response.PMLiveResponse;
 import com.iot.pmonitor.response.PMResponse;
-import com.iot.pmonitor.response.ProductionHeaderResponse;
 import com.iot.pmonitor.service.ProductionMonitorService;
+import com.iot.pmonitor.utils.PMUtils;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,16 +31,41 @@ import java.util.List;
 public class ProductionMonitorController {
 
     @Autowired
-    private ProductionMonitorService headerService;
+    private ProductionMonitorService monitorService;
 
     @PostMapping
-    public ResponseEntity saveProductionHeaderDetails(@RequestBody ProductionMonitorRequest headerRequest) {
-        PMResponse response = headerService.saveProductionMonitorDetails(headerRequest);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Object> savePMDetails(@RequestBody ProductionMonitorRequest headerRequest) {
+        return new ResponseEntity<>(monitorService.savePMDetails(headerRequest), HttpStatus.OK);
     }
 
-    @GetMapping
-    private ResponseEntity<List<ProductionHeaderResponse>> getProductionHeaderDetails(){
-        return new ResponseEntity<>(headerService.getProductionMonitorDetails(), HttpStatus.OK);
+    @GetMapping(value = "/live")
+    public ResponseEntity<List<PMLiveResponse>> getPMLiveDetails() {
+        return new ResponseEntity<>(monitorService.getLivePMDetails(), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/search")
+    @PageableAsQueryParam
+    public ResponseEntity<Object> getPartDetails(@RequestParam(required = false) PMSearchEnum searchEnum,
+
+                                                 @RequestParam(required = false) String fromDate,
+                                                 @RequestParam(required = false) String toDate,
+                                                 @RequestBody PMSearchRequest pmSearchRequest,
+                                                 @Parameter(hidden = true) Pageable pageable,
+                                                 @Parameter(hidden = true) PageDirection pageDirection,
+                                                 @Parameter(hidden = true) String sortParam) {
+        PMSearchModel pmSearchModel = PMSearchModel.builder()
+                .searchEnum(searchEnum)
+                .fromDate(fromDate)
+                .toDate(toDate)
+                .machineId(pmSearchRequest.getMachineId())
+                .partId(pmSearchRequest.getPartId())
+                .machTargetJobCount(pmSearchRequest.getMachTargetJobCount())
+                .machJobStatus(pmSearchRequest.getMachJobStatus())
+                .pageable(pageable)
+                .sortDirection(PMUtils.getDirection(pageDirection))
+                .sortName(sortParam)
+                .build();
+        PMResponse response = monitorService.findPMDetails(pmSearchModel);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
