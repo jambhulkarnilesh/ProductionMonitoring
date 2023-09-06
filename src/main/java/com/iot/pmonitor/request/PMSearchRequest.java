@@ -17,6 +17,6 @@ public class PMSearchRequest {
     @Schema(example = "1", description = "This field is used for machine target job count")
     private String machTargetJobCount;
 
-    @Schema(example = "1", description = "This field is used for Part Id")
+    @Schema(example = "Pending", description = "This field is used for Part Id")
     private String machJobStatus;
 }
