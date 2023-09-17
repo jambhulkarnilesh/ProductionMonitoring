@@ -10,7 +10,7 @@ public class EmployeeUpdateRequest {
     private Integer empId;
 
     @Schema(example = "1", description = "This field is used for department id")
-    private Integer depId;
+    private Integer deptId;
 
     @Schema(example = "1", description = "This field is used for designation id")
     private Integer desigId;

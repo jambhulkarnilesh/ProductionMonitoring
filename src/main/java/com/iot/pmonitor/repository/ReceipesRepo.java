@@ -9,15 +9,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReceipesRepo extends JpaRepository<ReceipeEntity, Integer> {
 
-    public Page<ReceipeEntity> findByRecepIdAndStatusCd(Integer recepId, String statusCd, Pageable pageable);
+    public Page<ReceipeEntity> findByRecepIdStartingWithAndStatusCd(Integer recepId, String statusCd, Pageable pageable);
 
-    public Page<ReceipeEntity> findByEmpIdAndStatusCd(String empId, String statusCd, Pageable pageable);
+    public Page<ReceipeEntity> findByEmpIdStartingWithAndStatusCd(String empId, String statusCd, Pageable pageable);
 
-    public Page<ReceipeEntity> findByMachineIdAndStatusCd(String machineId, String statusCd, Pageable pageable);
+    public Page<ReceipeEntity> findByMachineIdStartingWithAndStatusCd(String machineId, String statusCd, Pageable pageable);
 
-    public Page<ReceipeEntity> findByPartIdAndStatusCd(String partId, String statusCd, Pageable pageable);
+    public Page<ReceipeEntity> findByMachTargetJobCountStartingWithAndStatusCd(String machineId, String statusCd, Pageable pageable);
+    public Page<ReceipeEntity> findByPartIdStartingWithAndStatusCd(String partId, String statusCd, Pageable pageable);
 
-    public Page<ReceipeEntity> findByRecepStatusAndStatusCd(String recepStatus, String statusCd, Pageable pageable);
+    public Page<ReceipeEntity> findByRecepStatusStartingWithIgnoreCaseAndStatusCd(String recepStatus, String statusCd, Pageable pageable);
 
     public Page<ReceipeEntity> findByStatusCd(String status, Pageable pageable);
 }

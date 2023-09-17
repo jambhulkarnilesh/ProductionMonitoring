@@ -1,7 +1,6 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
-import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.DesignationAudit;
 import com.iot.pmonitor.entity.DesignationEntity;
 import com.iot.pmonitor.enums.DesignationSearchEnum;
@@ -37,7 +36,7 @@ public class DesignationServiceImp implements DesignationService {
 
     @Override
     public PMResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
-        Optional<DesignationEntity> designationEntities = designationRepo.findByDeptIdAndDesigNameEqualsIgnoreCase(designationCreateRequest.getDepatId(), designationCreateRequest.getDesigName());
+        Optional<DesignationEntity> designationEntities = designationRepo.findByDeptIdAndDesigNameEqualsIgnoreCase(designationCreateRequest.getDeptId(), designationCreateRequest.getDesigName());
         if(designationEntities.isPresent()){
             log.error("Inside DesignationServiceImp >> saveDesignation()");
             throw new PMException("DesignationServiceImp", false, "With Department name Designation name already exist");
@@ -81,13 +80,13 @@ public class DesignationServiceImp implements DesignationService {
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                departmentEntities = designationRepo.findByDesigIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                departmentEntities = designationRepo.findByDesigIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_DEPT_ID":
-                departmentEntities = designationRepo.findByDeptIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                departmentEntities = designationRepo.findByDeptIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                departmentEntities = designationRepo.findByDesigNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                departmentEntities = designationRepo.findByDesigNameStartingWithIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
                 departmentEntities = designationRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
@@ -122,7 +121,7 @@ public class DesignationServiceImp implements DesignationService {
 
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
         return DesignationEntity.designationEntityBuilder()
-                .deptId(designationCreateRequest.getDepatId())
+                .deptId(designationCreateRequest.getDeptId())
                 .desigName(designationCreateRequest.getDesigName())
                 .remark(designationCreateRequest.getRemark())
                 .statusCd(designationCreateRequest.getStatusCd())
@@ -133,7 +132,7 @@ public class DesignationServiceImp implements DesignationService {
     private DesignationEntity convertDesignationUpdateRequestToEntity(DesignationUpdateRequest designationUpdateRequest) {
         return DesignationEntity.designationEntityBuilder()
                 .desigId(designationUpdateRequest.getDesigId())
-                .deptId(designationUpdateRequest.getDepatId())
+                .deptId(designationUpdateRequest.getDeptId())
                 .desigName(designationUpdateRequest.getDesigName())
                 .remark(designationUpdateRequest.getRemark())
                 .statusCd(designationUpdateRequest.getStatusCd())

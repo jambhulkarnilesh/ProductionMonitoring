@@ -81,13 +81,13 @@ public class PartServiceImpl implements PartService {
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                partEntities = partRepo.findByPartIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                partEntities = partRepo.findByPartIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                partEntities = partRepo.findByPartNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                partEntities = partRepo.findByPartNameStartingWithIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_JOB_TARGET":
-                partEntities = partRepo.findByPartJobTargetAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                partEntities = partRepo.findByPartJobTargetStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_STATUS":
                 partEntities = partRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);

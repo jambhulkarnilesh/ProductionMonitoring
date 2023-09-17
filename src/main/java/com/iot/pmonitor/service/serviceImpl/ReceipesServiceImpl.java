@@ -85,16 +85,22 @@ public class ReceipesServiceImpl implements RecipesService {
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                receipeEntities = receipesRepo.findByRecepIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                receipeEntities = receipesRepo.findByRecepIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_EMP_ID":
-                receipeEntities = receipesRepo.findByEmpIdAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                receipeEntities = receipesRepo.findByEmpIdStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_MACHINE_ID":
-                receipeEntities = receipesRepo.findByMachineIdAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                receipeEntities = receipesRepo.findByMachineIdStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_PART_ID":
-                receipeEntities = receipesRepo.findByPartIdAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                receipeEntities = receipesRepo.findByPartIdStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                break;
+            case "BY_JOB_TARGET":
+                receipeEntities = receipesRepo.findByMachTargetJobCountStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                break;
+            case "BY_RECEIPE_STATUS":
+                receipeEntities = receipesRepo.findByRecepStatusStartingWithIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_STATUS":
                 receipeEntities = receipesRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);

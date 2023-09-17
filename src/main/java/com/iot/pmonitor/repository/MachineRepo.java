@@ -16,11 +16,11 @@ public interface MachineRepo extends JpaRepository<MachineEntity, Integer> {
 
     public Optional<MachineEntity> findByMachineNameEqualsIgnoreCase(String machineName);
 
-    public Page<MachineEntity> findByMachineIdAndStatusCd(Integer machineId, String statusCd, Pageable pageable);
+    public Page<MachineEntity> findByMachineIdStartingWithAndStatusCd(Integer machineId, String statusCd, Pageable pageable);
 
-    public Page<MachineEntity> findByMachineNameAndStatusCd(String machineName, String statusCd, Pageable pageable);
+    public Page<MachineEntity> findByMachineNameStartingWithIgnoreCaseAndStatusCd(String machineName, String statusCd, Pageable pageable);
 
-    public Page<MachineEntity> findByMachineMaxCapacityAndStatusCd(String machineMaxCapacity, String status,  Pageable pageable);
+    public Page<MachineEntity> findByMachineMaxCapacityStartingWithAndStatusCd(String machineMaxCapacity, String status,  Pageable pageable);
 
     public Page<MachineEntity> findByStatusCd(String status,Pageable pageable);
 

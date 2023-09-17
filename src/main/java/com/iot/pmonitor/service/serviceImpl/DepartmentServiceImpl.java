@@ -3,8 +3,6 @@ package com.iot.pmonitor.service.serviceImpl;
 import com.iot.pmonitor.constants.PMConstants;
 import com.iot.pmonitor.entity.DepartmentAudit;
 import com.iot.pmonitor.entity.DepartmentEntity;
-import com.iot.pmonitor.entity.DesignationEntity;
-import com.iot.pmonitor.entity.RoleEntity;
 import com.iot.pmonitor.enums.DepartmentSearchEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
@@ -13,7 +11,6 @@ import com.iot.pmonitor.repository.DepartmentRepo;
 import com.iot.pmonitor.request.DepartmentCreateRequest;
 import com.iot.pmonitor.request.DepartmentUpdateRequest;
 import com.iot.pmonitor.response.DepartmentReponse;
-import com.iot.pmonitor.response.DesignationReponse;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.DepartmentService;
 import com.iot.pmonitor.utils.PMUtils;
@@ -40,7 +37,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public PMResponse saveDepartment(DepartmentCreateRequest departmentCreateRequest) {
 
-        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDepatName());
+        Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepo.findByDeptNameEqualsIgnoreCase(departmentCreateRequest.getDeptName());
         if(optionalDepartmentEntity.isPresent()){
             log.error("Inside DepartmentServiceImpl >> saveDepartment()");
             throw new PMException("DepartmentServiceImpl", false, "Department name already exist");
@@ -84,10 +81,10 @@ public class DepartmentServiceImpl implements DepartmentService {
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                departmentEntities = departmentRepo.findByDeptIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                departmentEntities = departmentRepo.findByDeptIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                departmentEntities = departmentRepo.findByDeptNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                departmentEntities = departmentRepo.findByDeptNameStartingWithIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
                 departmentEntities = departmentRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
@@ -137,7 +134,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentEntity convertDepartmentCreateRequestToEntity(DepartmentCreateRequest roleCreateRequest) {
         return DepartmentEntity.departmentEntityBuilder()
-                .deptName(roleCreateRequest.getDepatName())
+                .deptName(roleCreateRequest.getDeptName())
                 .remark(roleCreateRequest.getRemark())
                 .statusCd(roleCreateRequest.getStatusCd())
                 .createdUserId(roleCreateRequest.getEmployeeId())
@@ -146,8 +143,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentEntity convertDepartmentUpdateRequestToEntity(DepartmentUpdateRequest roleUpdateRequest) {
         return DepartmentEntity.departmentEntityBuilder()
-                .deptId(roleUpdateRequest.getDepatId())
-                .deptName(roleUpdateRequest.getDepatName())
+                .deptId(roleUpdateRequest.getDeptId())
+                .deptName(roleUpdateRequest.getDeptName())
                 .remark(roleUpdateRequest.getRemark())
                 .statusCd(roleUpdateRequest.getStatusCd())
                 .createdUserId(roleUpdateRequest.getEmployeeId())

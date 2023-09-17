@@ -6,6 +6,7 @@ public enum PartSearchEnum {
     BY_ID("BY_ID"),
     BY_NAME("BY_NAME"),
     BY_JOB_TARGET("BY_JOB_TARGET"),
+    BY_RECEIPE_STATUS("BY_RECEIPE_STATUS"),
     BY_STATUS("BY_STATUS");
 
     private String searchBy;

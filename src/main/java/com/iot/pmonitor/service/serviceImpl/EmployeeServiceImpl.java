@@ -1,7 +1,6 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
-import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.EmployeeAudit;
 import com.iot.pmonitor.entity.EmployeeEntity;
 import com.iot.pmonitor.entity.EmployeeLoginAudit;
@@ -15,7 +14,6 @@ import com.iot.pmonitor.repository.EmployeeLoginRepo;
 import com.iot.pmonitor.repository.EmployeeRepo;
 import com.iot.pmonitor.request.EmployeeCreateRequest;
 import com.iot.pmonitor.request.EmployeeUpdateRequest;
-import com.iot.pmonitor.response.DepartmentReponse;
 import com.iot.pmonitor.response.EmployeeResponse;
 import com.iot.pmonitor.response.PMResponse;
 import com.iot.pmonitor.service.EmployeeService;
@@ -97,40 +95,40 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public PMResponse findEmployee(EmployeeSearchEnum searchEnum, String searchString, StatusCdEnum statusCdEnum, Pageable requestPageable, String sortParam, String pageDirection) {
-        Page<EmployeeEntity> partEntities = null;
+        Page<EmployeeEntity> employeeEntities = null;
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                partEntities = employeeRepo.findByEmpIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByEmpIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                partEntities = employeeRepo.findByEmpFirstNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByEmpFirstNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_DEPT_ID":
-                partEntities = employeeRepo.findByDeptIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByDeptIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_DESIG_ID":
-                partEntities = employeeRepo.findByDesigIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByDesigIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_ROLE_ID":
-                partEntities = employeeRepo.findByRoleIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByRoleIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_MOBILE_NO":
-                partEntities = employeeRepo.findByEmpMobileNoAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByEmpMobileNoAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_GENDER":
-                partEntities = employeeRepo.findByEmpGenderAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByEmpGenderAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
-                partEntities = employeeRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
+                employeeEntities = employeeRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);
                 break;
             case "ALL":
             default:
-                partEntities = employeeRepo.findAll(pageable);
+                employeeEntities = employeeRepo.findAll(pageable);
         }
         return PMResponse.builder()
                 .isSuccess(true)
-                .responseData(partEntities)
+                .responseData(employeeEntities)
                 .responseMessage(PMConstants.RECORD_FETCH)
                 .build();
     }
@@ -164,7 +162,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeEntity convertEmployeeCreateRequestToEntity(EmployeeCreateRequest employeeCreateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
-                .depId(employeeCreateRequest.getDepId())
+                .depId(employeeCreateRequest.getDeptId())
                 .desigId(employeeCreateRequest.getDesigId())
                 .roleId(employeeCreateRequest.getRoleId())
                 .empFirstName(employeeCreateRequest.getEmpFirstName())
@@ -188,7 +186,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeEntity convertEmployeeUpdateRequestToEntity(EmployeeUpdateRequest employeeUpdateRequest) {
         return EmployeeEntity.employeeEntityBuilder()
                 .empId(employeeUpdateRequest.getEmpId())
-                .depId(employeeUpdateRequest.getDepId())
+                .depId(employeeUpdateRequest.getDeptId())
                 .desigId(employeeUpdateRequest.getDesigId())
                 .roleId(employeeUpdateRequest.getRoleId())
                 .empFirstName(employeeUpdateRequest.getEmpFirstName())

@@ -8,7 +8,7 @@ public class DesignationCreateRequest {
 
 
     @Schema(example = "1", description = "This field is used for department id")
-    private Integer depatId;
+    private Integer deptId;
 
     @Schema(example = "Tool and Die", description = "This field is used for designation name")
     private String desigName;

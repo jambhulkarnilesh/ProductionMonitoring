@@ -16,11 +16,11 @@ import java.util.Optional;
 public interface PartRepo extends JpaRepository<PartEntity, Integer> {
 
     public Optional<PartEntity> findByPartNameEqualsIgnoreCase(String partName);
-    public Page<PartEntity> findByPartIdAndStatusCd(Integer partId, String statusCd, Pageable pageable);
+    public Page<PartEntity> findByPartIdStartingWithAndStatusCd(Integer partId, String statusCd, Pageable pageable);
 
-    public Page<PartEntity> findByPartNameAndStatusCd(String partName, String statusCd, Pageable pageable);
+    public Page<PartEntity> findByPartNameStartingWithIgnoreCaseAndStatusCd(String partName, String statusCd, Pageable pageable);
 
-    public Page<PartEntity> findByPartJobTargetAndStatusCd(String partJobTarget, String statusCd, Pageable pageable);
+    public Page<PartEntity> findByPartJobTargetStartingWithAndStatusCd(String partJobTarget, String statusCd, Pageable pageable);
 
     public Page<PartEntity> findByStatusCd(String status, Pageable pageable);
 

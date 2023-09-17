@@ -81,13 +81,13 @@ public class MachineServiceImpl implements MachineService {
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                machineEntities = machineRepo.findByMachineIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                machineEntities = machineRepo.findByMachineIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_NAME":
-                machineEntities = machineRepo.findByMachineNameAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                machineEntities = machineRepo.findByMachineNameStartingWithIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_MACHINE_CAPACITY":
-                machineEntities = machineRepo.findByMachineMaxCapacityAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                machineEntities = machineRepo.findByMachineMaxCapacityStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_STATUS":
                 machineEntities = machineRepo.findByStatusCd(statusCdEnum.getSearchType(), pageable);

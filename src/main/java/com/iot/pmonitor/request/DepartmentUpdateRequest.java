@@ -7,10 +7,10 @@ import lombok.Data;
 public class DepartmentUpdateRequest {
 
     @Schema(example = "1", description = "This field is used for department id")
-    private Integer depatId;
+    private Integer deptId;
 
     @Schema(example = "Tool and Die", description = "This field is used for department name")
-    private String depatName;
+    private String deptName;
 
     @Schema(example = "This is remark", description = "This field is used for department remark")
     private String remark;
