@@ -1,11 +1,13 @@
 package com.iot.pmonitor.service.serviceImpl;
 
 import com.iot.pmonitor.constants.PMConstants;
+import com.iot.pmonitor.entity.DepartmentEntity;
 import com.iot.pmonitor.entity.DesignationAudit;
 import com.iot.pmonitor.entity.DesignationEntity;
 import com.iot.pmonitor.enums.DesignationSearchEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
+import com.iot.pmonitor.repository.DepartmentRepo;
 import com.iot.pmonitor.repository.DesignationAuditRepo;
 import com.iot.pmonitor.repository.DesignationRepo;
 import com.iot.pmonitor.request.DesignationCreateRequest;
@@ -33,6 +35,9 @@ public class DesignationServiceImp implements DesignationService {
 
     @Autowired
     private DesignationAuditRepo designationAuditRepo;
+
+    @Autowired
+    private DepartmentRepo departmentRepo;
 
     @Override
     public PMResponse saveDesignation(DesignationCreateRequest designationCreateRequest) {
@@ -105,13 +110,19 @@ public class DesignationServiceImp implements DesignationService {
     @Override
     public List<DesignationReponse> findAllDesignationDetails(Integer deptId) {
 
-        List<DesignationEntity> designationEntities =  designationRepo.findAllDesignation(deptId);
+        List<DesignationEntity> designationEntities = null;
+        if (null == deptId) {
+            designationEntities = designationRepo.findAll();
+        } else {
+            designationEntities = designationRepo.findAllDesignation(deptId);
+        }
         List<DesignationReponse> designationReponses = new ArrayList<>();
         DesignationReponse designationReponse = null;
         for(DesignationEntity designationEntity : designationEntities){
             designationReponse = new DesignationReponse();
             designationReponse.setDesigId(designationEntity.getDesigId());
             designationReponse.setDeptId(designationEntity.getDeptId());
+            designationReponse.setDeptName(getDepartmentName(designationEntity.getDeptId()));
             designationReponse.setDesigName(designationEntity.getDesigName());
             designationReponse.setStatusCd(designationEntity.getStatusCd());
             designationReponses.add(designationReponse);
@@ -119,6 +130,13 @@ public class DesignationServiceImp implements DesignationService {
         return designationReponses;
     }
 
+    private String getDepartmentName(Integer deptId){
+        Optional<DepartmentEntity> departmentEntity = departmentRepo.findById(deptId);
+        if(departmentEntity.isPresent()){
+            return departmentEntity.get().getDeptName();
+        }
+        return null;
+    }
     private DesignationEntity convertDesignationCreateRequestToEntity(DesignationCreateRequest designationCreateRequest) {
         return DesignationEntity.designationEntityBuilder()
                 .deptId(designationCreateRequest.getDeptId())

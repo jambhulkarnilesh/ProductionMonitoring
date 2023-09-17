@@ -33,7 +33,7 @@ public class ReceipeEntity extends AuditEnabledEntity {
     private Timestamp recepDate;
 
     @Column(name = "emp_id")
-    private int empId;
+    private Integer empId;
 
     @Column(name = "mach_id")
     private Integer machineId;
@@ -54,7 +54,7 @@ public class ReceipeEntity extends AuditEnabledEntity {
     private String statusCd;
 
     @Builder(builderMethodName = "receipeEntityBuilder")
-    public ReceipeEntity(Integer recepId, Timestamp recepDate, int empId, Integer machineId, Integer partId, String machTargetJobCount, String remark, String recepStatus, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
+    public ReceipeEntity(Integer recepId, Timestamp recepDate, Integer empId, Integer machineId, Integer partId, String machTargetJobCount, String remark, String recepStatus, String statusCd, Instant createdDate, String createdUserId, Instant updatedDate, String updatedUserId) {
         super(createdDate, createdUserId, updatedDate, updatedUserId);
         this.recepId = recepId;
         this.recepDate = recepDate;

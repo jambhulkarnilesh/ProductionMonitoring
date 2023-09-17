@@ -6,6 +6,7 @@ import com.iot.pmonitor.entity.PartEntity;
 import com.iot.pmonitor.entity.ReceipeAudit;
 import com.iot.pmonitor.entity.ReceipeEntity;
 import com.iot.pmonitor.enums.PartSearchEnum;
+import com.iot.pmonitor.enums.ReceipeStatusEnum;
 import com.iot.pmonitor.enums.StatusCdEnum;
 import com.iot.pmonitor.exception.PMException;
 import com.iot.pmonitor.model.ReceipesSearchModel;
@@ -126,7 +127,7 @@ public class ReceipesServiceImpl implements RecipesService {
                 .partId(recipesCreateRequest.getPartId())
                 .machTargetJobCount(recipesCreateRequest.getMachTargetJobCount())
                 .remark(recipesCreateRequest.getRemark())
-                .recepStatus(recipesCreateRequest.getRecepStatus())
+                .recepStatus(ReceipeStatusEnum.PENDING.getCode())
                 .statusCd(recipesCreateRequest.getStatusCd())
                 .createdUserId(recipesCreateRequest.getEmployeeId())
                 .build();

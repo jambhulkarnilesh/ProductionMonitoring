@@ -26,7 +26,7 @@ public class RoleAudit extends AuditEnabledEntity{
     private Integer roleAuditId;
 
     @Column(name = "role_id")
-    private int roleId;
+    private Integer roleId;
 
     @Column(name = "role_name")
     private String roleName;

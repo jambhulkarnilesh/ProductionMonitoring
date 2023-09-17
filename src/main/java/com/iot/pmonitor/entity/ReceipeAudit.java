@@ -34,7 +34,7 @@ public class ReceipeAudit extends  AuditEnabledEntity{
     private Timestamp recepDate;
 
     @Column(name = "emp_id")
-    private int empId;
+    private Integer empId;
 
     @Column(name = "mach_id")
     private Integer machineId;

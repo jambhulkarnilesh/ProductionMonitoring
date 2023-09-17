@@ -18,7 +18,7 @@ public class RecipesUpdateRequest {
     private Timestamp recepDate;
 
     @Schema(example = "1", description = "This field is used for employee id")
-    private int empId;
+    private Integer empId;
 
     @Schema(example = "1", description = "This field is used for machine id")
     private Integer machineId;

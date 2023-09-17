@@ -29,7 +29,7 @@ public class DesignationAudit extends AuditEnabledEntity{
     private Integer desigId;
 
     @Column(name = "dept_id")
-    private int deptId;
+    private Integer deptId;
 
     @Column(name = "desig_name")
     private String desigName;
