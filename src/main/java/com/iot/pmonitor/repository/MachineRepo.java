@@ -16,7 +16,7 @@ public interface MachineRepo extends JpaRepository<MachineEntity, Integer> {
 
     public Optional<MachineEntity> findByMachineNameEqualsIgnoreCase(String machineName);
 
-    public Page<MachineEntity> findByMachineIdStartingWithAndStatusCd(Integer machineId, String statusCd, Pageable pageable);
+    public Page<MachineEntity> findByMachineIdAndStatusCd(Integer machineId, String statusCd, Pageable pageable);
 
     public Page<MachineEntity> findByMachineNameStartingWithIgnoreCaseAndStatusCd(String machineName, String statusCd, Pageable pageable);
 

@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface DesignationRepo extends JpaRepository<DesignationEntity, Integer> {
 
-    public Page<DesignationEntity> findByDesigIdStartingWithAndStatusCd(Integer desigId, String statusCd, Pageable pageable);
+    public Page<DesignationEntity> findByDesigIdAndStatusCd(Integer desigId, String statusCd, Pageable pageable);
 
-    public Page<DesignationEntity> findByDeptIdStartingWithAndStatusCd(Integer deptId, String statusCd, Pageable pageable);
+    public Page<DesignationEntity> findByDeptIdAndStatusCd(Integer deptId, String statusCd, Pageable pageable);
 
     public Page<DesignationEntity> findByDesigNameStartingWithIgnoreCaseAndStatusCd(String desigName, String statusCd, Pageable pageable);
 

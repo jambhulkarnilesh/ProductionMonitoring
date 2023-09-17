@@ -85,19 +85,19 @@ public class ReceipesServiceImpl implements RecipesService {
         Pageable pageable = PMUtils.sort(requestPageable, sortParam, pageDirection);
         switch (searchEnum.getSearchType()) {
             case "BY_ID":
-                receipeEntities = receipesRepo.findByRecepIdStartingWithAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
+                receipeEntities = receipesRepo.findByRecepIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_EMP_ID":
-                receipeEntities = receipesRepo.findByEmpIdStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(), pageable);
+                receipeEntities = receipesRepo.findByEmpIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(), pageable);
                 break;
             case "BY_MACHINE_ID":
-                receipeEntities = receipesRepo.findByMachineIdStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                receipeEntities = receipesRepo.findByMachineIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_PART_ID":
-                receipeEntities = receipesRepo.findByPartIdStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                receipeEntities = receipesRepo.findByPartIdAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_JOB_TARGET":
-                receipeEntities = receipesRepo.findByMachTargetJobCountStartingWithAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
+                receipeEntities = receipesRepo.findByMachTargetJobCountAndStatusCd(Integer.parseInt(searchString), statusCdEnum.getSearchType(),pageable);
                 break;
             case "BY_RECEIPE_STATUS":
                 receipeEntities = receipesRepo.findByRecepStatusStartingWithIgnoreCaseAndStatusCd(searchString, statusCdEnum.getSearchType(),pageable);
